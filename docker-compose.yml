@@ -1,0 +1,94 @@
+version: "3"
+services:
+  # Database, sgared between strapi and core API
+  mongodb:
+    image: mongo:4.2.6-bionic
+    container_name: wysiblocks_mongodb
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user_stories
+      MONGO_INITDB_ROOT_PASSWORD: user_stories_root
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    volumes:
+      - wysiblocks_mongodbdata:/data/db
+    networks:
+      - wysiblocks_backend
+    ports:
+      - 27017:27017
+
+  # A GUI for MongoDB
+  mongo-express:
+    image: mongo-express
+    container_name: wysiblocks_mongo_express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: user_stories
+      ME_CONFIG_BASICAUTH_PASSWORD: user_stories_mongo_express
+      ME_CONFIG_MONGODB_ADMINUSERNAME: user_stories
+      ME_CONFIG_MONGODB_ADMINPASSWORD: user_stories_root
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_SERVER: wysiblocks_mongodb
+      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongodb
+    networks:
+      - wysiblocks_backend
+
+  # Open source Headless CMS with customizable APIs
+#  strapi_cms:
+#     container_name: wysiblocks_strapi_cms
+#     restart: unless-stopped
+#     depends_on:
+#       - mongodb
+#     image: image_name:dev
+#     build:
+#       context: ../../server/
+#       dockerfile: ../docker/server_dev/Dockerfile
+#     volumes:
+#       - ../../server:/app/
+#     ports:
+#       - "8082:8082"
+#     environment:
+#       - MONGODB_DATABASE: strapi_cms
+#       - MONGODB_USERNAME: strapi
+#       - MONGODB_PASSWORD: user_stories_strapi
+#       - NODE_ENV: development
+#       - CHOKIDAR_USEPOLLING: "true"
+#     networks:
+#       - wysiblocks_frontend
+#       - wysiblocks_backend
+
+# core_api:
+#   container_name: wysiblocks_core_api
+#   restart: unless-stopped
+#   depends_on:
+#     - mongodb
+#   image: image_name:dev
+#   build:
+#     context: ../../server/
+#     dockerfile: ../docker/server_dev/Dockerfile
+#   volumes:
+#     - ../../server:/app/
+#   ports:
+#     - "8082:8082"
+#   environment:
+#     - NODE_ENV=development
+#     - CHOKIDAR_USEPOLLING="true"
+#   networks:
+#     - wysiblocks_frontend
+#     - wysiblocks_backend
+
+networks:
+  # wysiblocks_frontend:
+  #   driver: bridge
+  wysiblocks_backend:
+    driver: bridge
+
+volumes:
+  wysiblocks_mongodbdata:
+    driver: local
