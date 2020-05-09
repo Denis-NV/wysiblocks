@@ -2,7 +2,7 @@
   "name": "strapi-cms",
   "private": true,
   "version": "0.1.0",
-  "description": "A Strapi application",
+  "description": "A Strapi CMS for Wysiblocks App",
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
