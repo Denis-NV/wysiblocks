@@ -6,11 +6,15 @@
       "settings": {
         "host": "${process.env.DATABASE_HOST || '127.0.0.1'}",
         "port": "${process.env.DATABASE_PORT || 27017}",
-        "database": "${process.env.DATABASE_NAME || 'strapi'}",
-        "username": "${process.env.DATABASE_USERNAME || ''}",
-        "password": "${process.env.DATABASE_PASSWORD || ''}"
+        "database": "${process.env.DATABASE_NAME || 'strapi_cms'}",
+        "username": "${process.env.DATABASE_USERNAME || 'strapi'}",
+        "password": "${process.env.DATABASE_PASSWORD || 'user_stories_strapi'}",
+        "srv": false
       },
-      "options": {}
+      "options": {
+        "authenticationDatabase": "${process.env.AUTHENTICATION_DATABASE || 'strapi_cms'}",
+        "ssl": false
+      }
     }
   }
 }
