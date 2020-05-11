@@ -14,7 +14,7 @@ services:
     volumes:
       - wysiblocks_mongodbdata:/data/db
     networks:
-      - wysiblocks_backend
+      - backend
     ports:
       - 27017:27017
 
@@ -37,7 +37,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - wysiblocks_backend
+      - backend
 
   # Open source Headless CMS with customizable APIs
   strapi_cms:
@@ -45,11 +45,13 @@ services:
     restart: unless-stopped
     depends_on:
       - mongodb
-    image: denisnv/wysiblocks_strapi_cms:dev
+    image: denisnv/wysiblocks_strapi_cms:latest
     build:
       context: ./strapi_cms/
+      dockerfile: production.Dockerfile
     volumes:
-      - ./strapi_cms/public:/app/public/
+      # - ./strapi_cms/public:/app/public/
+      - strapi_public:/app/public/
     ports:
       - "1337:1337"
     environment:
@@ -60,7 +62,7 @@ services:
       - DATABASE_PASSWORD=user_stories_strapi
       - AUTHENTICATION_DATABASE=strapi_cms
     networks:
-      - wysiblocks_backend
+      - backend
 
 # core_api:
 #   container_name: wysiblocks_core_api
@@ -79,17 +81,17 @@ services:
 #     - NODE_ENV=development
 #     - CHOKIDAR_USEPOLLING="true"
 #   networks:
-#     - wysiblocks_frontend
-#     - wysiblocks_backend
+#     - frontend
+#     - backend
 
 networks:
-  # wysiblocks_frontend:
+  # frontend:
   #   driver: bridge
-  wysiblocks_backend:
+  backend:
     driver: bridge
 
 volumes:
   wysiblocks_mongodbdata:
     driver: local
-  wysiblocks_strapi_public:
+  strapi_public:
     driver: local
