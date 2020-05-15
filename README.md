@@ -82,3 +82,9 @@ Display all available commands.
 ```
 yarn strapi
 ```
+
+## Build and deploy images for fropuction
+
+```
+docker-compose -f docker-compose.production-build.yml up --no-start --build
+```

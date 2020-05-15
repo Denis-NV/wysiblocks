@@ -12,11 +12,12 @@ services:
       - MONGODB_DATA_DIR=/data/db
       - MONGODB_LOG_DIR=/dev/null
     volumes:
-      - wysiblocks_mongodbdata:/data/db
+      - mongodbdata:/data/db
     networks:
       - backend
-    ports:
-      - 27017:27017
+    # This is only required if running strapi outside of container
+    # ports:
+    #   - 27017:27017
 
   # A GUI for MongoDB
   mongo-express:
@@ -45,12 +46,17 @@ services:
     restart: unless-stopped
     depends_on:
       - mongodb
-    image: denisnv/wysiblocks_strapi_cms:latest
+    image: denisnv/wysiblocks_strapi_cms:dev
     build:
       context: ./strapi_cms/
-      dockerfile: production.Dockerfile
+      dockerfile: dev.Dockerfile
     volumes:
-      # - ./strapi_cms/public:/app/public/
+      - ./strapi_cms/api:/app/api/
+      - ./strapi_cms/components:/app/components/
+      - ./strapi_cms/config:/app/config/
+      - ./strapi_cms/extensions:/app/extensions/
+      - ./strapi_cms/.eslintrc:/app/eslintrc
+      - ./strapi_cms/flvicon.ico:/app/flvicon.ico
       - strapi_public:/app/public/
     ports:
       - "1337:1337"
@@ -61,6 +67,8 @@ services:
       - DATABASE_USERNAME=strapi
       - DATABASE_PASSWORD=user_stories_strapi
       - AUTHENTICATION_DATABASE=strapi_cms
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING="true"
     networks:
       - backend
 
@@ -91,7 +99,7 @@ networks:
     driver: bridge
 
 volumes:
-  wysiblocks_mongodbdata:
+  mongodbdata:
     driver: local
   strapi_public:
     driver: local
