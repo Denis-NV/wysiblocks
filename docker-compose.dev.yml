@@ -1,29 +1,84 @@
 version: "3"
 services:
+  # Database, sgared between keycloak and wordpress
+  mysqldb:
+    container_name: wysiblocks_mysqldb
+    restart: unless-stopped
+    image: mysql:5.7
+    volumes:
+      - mysqldbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=user_stories_root
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=user_stories_keycloak
+    networks:
+      - backend
+
+  # A GUI for MySqlDB
+  adminer:
+    image: adminer:4.7
+    container_name: wysiblocks_mysqladminer
+    restart: unless-stopped
+    environment:
+      - ADMINER_DEFAULT_SERVER=mysqldb
+    ports:
+      - 8082:8080
+    depends_on:
+      - mysqldb
+    networks:
+      - backend
+
+  # Standalone authentication server
+  keycloak:
+    container_name: wysiblocks_keycloak
+    restart: unless-stopped
+    depends_on:
+      - mysqldb
+    image: jboss/keycloak:10.0.1
+    volumes:
+      - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_USER=user_stories
+      - KEYCLOAK_PASSWORD=user_stories_root
+      - DB_VENDOR=mysql
+      - DB_ADDR=mysqldb
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=user_stories_keycloak
+    networks:
+      - backend
+
   # Database, sgared between strapi and core API
   mongodb:
-    image: mongo:4.2.6-bionic
     container_name: wysiblocks_mongodb
     restart: unless-stopped
+    image: mongo:4.2.6-bionic
     command: mongod --auth
+    volumes:
+      - mongodbdata:/data/db
+    # This is only required if running strapi outside of container
+    # ports:
+    #   - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user_stories
       - MONGO_INITDB_ROOT_PASSWORD=user_stories_root
       - MONGODB_DATA_DIR=/data/db
       - MONGODB_LOG_DIR=/dev/null
-    volumes:
-      - mongodbdata:/data/db
     networks:
       - backend
-    # This is only required if running strapi outside of container
-    # ports:
-    #   - 27017:27017
 
   # A GUI for MongoDB
   mongo-express:
-    image: mongo-express
     container_name: wysiblocks_mongo_express
     restart: unless-stopped
+    depends_on:
+      - mongodb
+    image: mongo-express
+    ports:
+      - 8081:8081
     environment:
       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
       - ME_CONFIG_BASICAUTH_USERNAME=user_stories
@@ -33,10 +88,6 @@ services:
       - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_SERVER=wysiblocks_mongodb
       - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
-    ports:
-      - 8081:8081
-    depends_on:
-      - mongodb
     networks:
       - backend
 
@@ -100,6 +151,8 @@ networks:
 
 volumes:
   mongodbdata:
+    driver: local
+  mysqldbdata:
     driver: local
   strapi_public:
     driver: local
