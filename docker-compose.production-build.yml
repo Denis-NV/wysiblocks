@@ -6,3 +6,10 @@ services:
     build:
       context: ./strapi_cms/
       dockerfile: production.Dockerfile
+
+  # Standalone authentication server
+  keycloak:
+    image: denisnv/wysiblocks_keycloak:latest
+    build:
+      context: ./keycloak/
+      dockerfile: production.Dockerfile

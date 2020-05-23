@@ -38,6 +38,8 @@ services:
     image: jboss/keycloak:10.0.1
     volumes:
       - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
+      - ./keycloak/configuration/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
+      - ./keycloak/configuration/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
     ports:
       - 8080:8080
     environment:
@@ -107,7 +109,7 @@ services:
       - ./strapi_cms/config:/app/config/
       - ./strapi_cms/extensions:/app/extensions/
       - ./strapi_cms/.eslintrc:/app/eslintrc
-      - ./strapi_cms/flvicon.ico:/app/flvicon.ico
+      - ./strapi_cms/favicon.ico:/app/favicon.ico
       - strapi_public:/app/public/
     ports:
       - "1337:1337"

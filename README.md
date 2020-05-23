@@ -83,8 +83,66 @@ Display all available commands.
 yarn strapi
 ```
 
-## Build and deploy images for fropuction
+## Keycloak development
+
+1. Create a folder for your theme (keycloak/themes/wysiblocks)
+2. Mount that folder into keycloak
+   ```
+   ...
+   volumes:
+      - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
+   ...
+   ```
+3. Run the keyclak container (along with the rest of the stack)
+4. Copy two themes (for reference and to use as basis) and two config files (to enable dev mode)
+
+   ```
+   $ docker cp wysiblocks_keycloak:/opt/jboss/keycloak/themes/keycloak .\keycloak\themes\keycloak
+
+   $ docker cp wysiblocks_keycloak:/opt/jboss/keycloak/themes/base .\keycloak\themes\base
+
+   $ docker cp wysiblocks_keycloak:/opt/jboss/keycloak/standalone/configuration/standalone.xml .\keycloak\configuration\standalone.xml
+
+   $ docker cp wysiblocks_keycloak:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml .\keycloak\configuration\standalone-ha.xml
+   ```
+
+5. Update 3 values inside newly copied config files (standalone.xml, standalone-ha.xml)
+   ```
+   <staticMaxAge>-1</staticMaxAge>
+   <cacheThemes>false</cacheThemes>
+   <cacheTemplates>false</cacheTemplates>
+   ```
+6. Stop the containers stack and mount the new files into the keycloak container
+   ```
+   ...
+   volumes:
+      - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
+      - ./keycloak/configuration/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
+      - ./keycloak/configuration/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
+   ...
+   ```
+7. Run the container stack again
+8. Copy appropriate folder and file stucture from "base" theme into your theme folder (wysiblocks) (https://www.keycloak.org/docs/latest/server_development/#creating-a-theme)
+
+#### Sass instructions
+
+Make sure you have 'sass' processor installed. If not, install it globally
 
 ```
-docker-compose -f docker-compose.production-build.yml up --no-start --build
+$ yarn global add sass
+
+```
+
+Start sass process in watch mode for the login.scss file of your theme (wysiblocks)
+
+```
+$  sass --watch keycloak/themes/wysiblocks/login/resources/scss/login.scss keycloak/themes/wysiblocks/login/resources/css/login.css
+```
+
+## Build and deploy images for production
+
+```
+$ docker-compose -f docker-compose.production-build.yml up --no-start --build
+
+$ docker-compose -f docker-compose.production-build.yml down
 ```
