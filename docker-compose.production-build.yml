@@ -1,6 +1,13 @@
 version: "3"
 services:
   # Open source Headless CMS with customizable APIs
+  mongodb:
+    image: denisnv/wysiblocks_mongodb:latest
+    build:
+      context: ./mongo/
+      dockerfile: .Dockerfile
+
+  # Open source Headless CMS with customizable APIs
   strapi_cms:
     image: denisnv/wysiblocks_strapi_cms:latest
     build:

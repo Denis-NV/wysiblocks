@@ -29,7 +29,7 @@ Create separate users for each service that will be using the database to make t
 4. Create a new user that will be allowed to access this database:
 
    ```
-   db.createUser({user: '[new user name]', pwd: '[new user password]', roles: [{role: 'readWrite', db: '[database name]'}]})
+   >  db.createUser({user: '[new user name]', pwd: '[new user password]', roles: [{role: 'readWrite', db: '[database name]'}]})
    ```
 
 ## Strapi installation and setup

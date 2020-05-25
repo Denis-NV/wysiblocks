@@ -57,18 +57,25 @@ services:
   mongodb:
     container_name: wysiblocks_mongodb
     restart: unless-stopped
-    image: mongo:4.2.6-bionic
+    image: denisnv/wysiblocks_mongodb:latest
     command: mongod --auth
     volumes:
       - mongodbdata:/data/db
-    # This is only required if running strapi outside of container
+    # This is only required if running APIs outside of container
     # ports:
     #   - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=user_stories
       - MONGO_INITDB_ROOT_PASSWORD=user_stories_root
+      - MONGO_INITDB_DATABASE=admin
       - MONGODB_DATA_DIR=/data/db
       - MONGODB_LOG_DIR=/dev/null
+      - MONGO_CORE_API_DB=core_api
+      - MONGO_CORE_API_USER=core
+      - MONGO_CORE_API_PASS=user_stories_core
+      - MONGO_STRAPI_CMS_DB=strapi_cms
+      - MONGO_STRAPI_CMS_USER=strapi
+      - MONGO_STRAPI_CMS_PASS=user_stories_strapi
     networks:
       - backend
 
@@ -125,25 +132,32 @@ services:
     networks:
       - backend
 
-# core_api:
-#   container_name: wysiblocks_core_api
-#   restart: unless-stopped
-#   depends_on:
-#     - mongodb
-#   image: image_name:dev
-#   build:
-#     context: ../../server/
-#     dockerfile: ../docker/server_dev/Dockerfile
-#   volumes:
-#     - ../../server:/app/
-#   ports:
-#     - "8082:8082"
-#   environment:
-#     - NODE_ENV=development
-#     - CHOKIDAR_USEPOLLING="true"
-#   networks:
-#     - frontend
-#     - backend
+  # Core Wysiblocks engine API
+  core_api:
+    container_name: wysiblocks_core_api
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    image: denisnv/wysiblocks_core_api:dev
+    build:
+      context: ./core_api/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./core_api/src:/app/src/
+    ports:
+      - "8083:8080"
+    environment:
+      - DATABASE_HOST=mongodb
+      - DATABASE_PORT=27017
+      - DATABASE_NAME=core_api
+      - DATABASE_USERNAME=core
+      - DATABASE_PASSWORD=user_stories_core
+      - AUTHENTICATION_DATABASE=core_api
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING="true"
+    networks:
+      # - frontend
+      - backend
 
 networks:
   # frontend:
