@@ -1,57 +1,57 @@
 version: "3"
 services:
-  # Database, sgared between keycloak and wordpress
-  mysqldb:
-    container_name: wysiblocks_mysqldb
-    restart: unless-stopped
-    image: mysql:5.7
-    volumes:
-      - mysqldbdata:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=user_stories_root
-      - MYSQL_DATABASE=keycloak
-      - MYSQL_USER=keycloak
-      - MYSQL_PASSWORD=user_stories_keycloak
-    networks:
-      - backend
+  # # Database, sgared between keycloak and wordpress
+  # mysqldb:
+  #   container_name: wysiblocks_mysqldb
+  #   restart: unless-stopped
+  #   image: mysql:5.7
+  #   volumes:
+  #     - mysqldbdata:/var/lib/mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=user_stories_root
+  #     - MYSQL_DATABASE=keycloak
+  #     - MYSQL_USER=keycloak
+  #     - MYSQL_PASSWORD=user_stories_keycloak
+  #   networks:
+  #     - backend
 
-  # A GUI for MySqlDB
-  adminer:
-    image: adminer:4.7
-    container_name: wysiblocks_mysqladminer
-    restart: unless-stopped
-    environment:
-      - ADMINER_DEFAULT_SERVER=mysqldb
-    ports:
-      - 8082:8080
-    depends_on:
-      - mysqldb
-    networks:
-      - backend
+  # # A GUI for MySqlDB
+  # adminer:
+  #   image: adminer:4.7
+  #   container_name: wysiblocks_mysqladminer
+  #   restart: unless-stopped
+  #   environment:
+  #     - ADMINER_DEFAULT_SERVER=mysqldb
+  #   ports:
+  #     - 8082:8080
+  #   depends_on:
+  #     - mysqldb
+  #   networks:
+  #     - backend
 
-  # Standalone authentication server
-  keycloak:
-    container_name: wysiblocks_keycloak
-    restart: unless-stopped
-    depends_on:
-      - mysqldb
-    image: jboss/keycloak:10.0.1
-    volumes:
-      - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
-      - ./keycloak/configuration/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
-      - ./keycloak/configuration/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
-    ports:
-      - 8080:8080
-    environment:
-      - KEYCLOAK_USER=user_stories
-      - KEYCLOAK_PASSWORD=user_stories_root
-      - DB_VENDOR=mysql
-      - DB_ADDR=mysqldb
-      - DB_DATABASE=keycloak
-      - DB_USER=keycloak
-      - DB_PASSWORD=user_stories_keycloak
-    networks:
-      - backend
+  # # Standalone authentication server
+  # keycloak:
+  #   container_name: wysiblocks_keycloak
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mysqldb
+  #   image: jboss/keycloak:10.0.1
+  #   volumes:
+  #     - ./keycloak/themes/wysiblocks:/opt/jboss/keycloak/themes/wysiblocks
+  #     - ./keycloak/configuration/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
+  #     - ./keycloak/configuration/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
+  #   ports:
+  #     - 8080:8080
+  #   environment:
+  #     - KEYCLOAK_USER=user_stories
+  #     - KEYCLOAK_PASSWORD=user_stories_root
+  #     - DB_VENDOR=mysql
+  #     - DB_ADDR=mysqldb
+  #     - DB_DATABASE=keycloak
+  #     - DB_USER=keycloak
+  #     - DB_PASSWORD=user_stories_keycloak
+  #   networks:
+  #     - backend
 
   # Database, sgared between strapi and core API
   mongodb:
@@ -59,6 +59,7 @@ services:
     restart: unless-stopped
     image: denisnv/wysiblocks_mongodb:latest
     command: mongod --auth
+    # command: bash -c "mongod --auth --fork --logpath /var/log/mongodb.log && sleep 5 && mongo /docker-entrypoint-initdb.d/create_users.sh"
     volumes:
       - mongodbdata:/data/db
     # This is only required if running APIs outside of container
@@ -111,10 +112,14 @@ services:
       context: ./strapi_cms/
       dockerfile: dev.Dockerfile
     volumes:
+      - ./strapi_cms/admin:/app/admin/
       - ./strapi_cms/api:/app/api/
       - ./strapi_cms/components:/app/components/
       - ./strapi_cms/config:/app/config/
       - ./strapi_cms/extensions:/app/extensions/
+      - ./strapi_cms/hooks:/app/hooks/
+      - ./strapi_cms/middlewares:/app/middlewares/
+      - ./strapi_cms/plugins:/app/plugins/
       - ./strapi_cms/.eslintrc:/app/eslintrc
       - ./strapi_cms/favicon.ico:/app/favicon.ico
       - strapi_public:/app/public/
