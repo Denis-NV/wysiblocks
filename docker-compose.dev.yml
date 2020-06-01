@@ -137,32 +137,32 @@ services:
     networks:
       - backend
 
-  # Core Wysiblocks engine API
-  core_api:
-    container_name: wysiblocks_core_api
-    restart: unless-stopped
-    depends_on:
-      - mongodb
-    image: denisnv/wysiblocks_core_api:dev
-    build:
-      context: ./core_api/
-      dockerfile: dev.Dockerfile
-    volumes:
-      - ./core_api/src:/app/src/
-    ports:
-      - "8083:8080"
-    environment:
-      - DATABASE_HOST=mongodb
-      - DATABASE_PORT=27017
-      - DATABASE_NAME=core_api
-      - DATABASE_USERNAME=core
-      - DATABASE_PASSWORD=user_stories_core
-      - AUTHENTICATION_DATABASE=core_api
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING="true"
-    networks:
-      # - frontend
-      - backend
+  # # Core Wysiblocks engine API
+  # core_api:
+  #   container_name: wysiblocks_core_api
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - mongodb
+  #   image: denisnv/wysiblocks_core_api:dev
+  #   build:
+  #     context: ./core_api/
+  #     dockerfile: dev.Dockerfile
+  #   volumes:
+  #     - ./core_api/src:/app/src/
+  #   ports:
+  #     - "8083:8080"
+  #   environment:
+  #     - DATABASE_HOST=mongodb
+  #     - DATABASE_PORT=27017
+  #     - DATABASE_NAME=core_api
+  #     - DATABASE_USERNAME=core
+  #     - DATABASE_PASSWORD=user_stories_core
+  #     - AUTHENTICATION_DATABASE=core_api
+  #     - NODE_ENV=development
+  #     - CHOKIDAR_USEPOLLING="true"
+  #   networks:
+  #     # - frontend
+  #     - backend
 
 networks:
   # frontend:

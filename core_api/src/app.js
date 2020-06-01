@@ -1,26 +1,45 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
+const expressGraphQL = require("express-graphql");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
-console.log("ENV vars");
-console.log(process.env.DATABASE_HOST);
-console.log(process.env.DATABASE_PORT);
-console.log(process.env.DATABASE_NAME);
-console.log(process.env.DATABASE_USERNAME);
-console.log(process.env.DATABASE_PASSWORD);
-
 //
 const app = express();
+var corsOptions = {
+  origin: "*",
+  credentials: true,
+};
 
 // Middlewares
-app.use(cors());
-app.use(bodyParser.json());
+app.use(cors(corsOptions));
 
-// Routes
+//
+const startGraphQLServer = (def_objects) => {
+  const server_port = 5000;
+  // const gen = new GraphQLSchemaGenerator(def_objects, "payload_ref");
+
+  // const schema = gen.getSchema();
+
+  // app.use(
+  //   "/graphql",
+  //   expressGraphQL({
+  //     schema,
+  //     graphiql: true,
+  //     pretty: true,
+  //   })
+  // );
+
+  app.listen(server_port, () => {
+    console.log(
+      `Running a GraphQL API server at localhost:${server_port}/graphql`
+    );
+  });
+};
 
 // Connect to DB
 mongoose
@@ -37,10 +56,10 @@ mongoose
     console.log(
       `Successfully connected to mongo ${process.env.DATABASE_NAME} database at ${process.env.DATABASE_HOST}`
     );
+
+    startGraphQLServer();
   })
   .catch((err) => {
     console.log("error connecting to the database");
     process.exit();
   });
-
-app.listen(8080);
