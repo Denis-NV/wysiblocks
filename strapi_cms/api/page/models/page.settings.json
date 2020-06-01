@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pages",
+  "info": {
+    "name": "Page"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "page_blocks": {
+      "collection": "page-block",
+      "via": "page"
+    },
+    "settings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.page-settings-duple",
+      "required": true
+    },
+    "uri": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
+    "unpublished": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

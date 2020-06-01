@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "nav_items",
+  "info": {
+    "name": "Nav Item"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "is_live": {
+      "type": "boolean",
+      "default": false
+    },
+    "unpublished": {
+      "type": "boolean",
+      "default": false
+    },
+    "page": {
+      "unique": true,
+      "model": "page"
+    },
+    "settings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.nav-item-settings-duple",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_duples_data_sets",
+  "info": {
+    "name": "Block Data Set",
+    "icon": "box"
+  },
+  "options": {},
+  "attributes": {
+    "order": {
+      "type": "integer",
+      "required": true,
+      "unique": false
+    },
+    "custom_map": {
+      "type": "json",
+      "required": false
+    }
+  }
+}

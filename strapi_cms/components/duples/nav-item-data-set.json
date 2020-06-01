@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_duples_nav_item_data_sets",
+  "info": {
+    "name": "Nav Item Data Set",
+    "icon": "database"
+  },
+  "options": {},
+  "attributes": {
+    "lft": {
+      "type": "integer",
+      "required": true
+    },
+    "rgt": {
+      "type": "integer",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "body": {
+      "type": "text"
+    }
+  }
+}

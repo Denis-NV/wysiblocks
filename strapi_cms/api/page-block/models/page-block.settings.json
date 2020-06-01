@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "page_blocks",
+  "info": {
+    "name": "Page Block"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "component": {
+      "type": "string",
+      "required": true
+    },
+    "settings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.settings-duple",
+      "required": true
+    },
+    "page": {
+      "via": "page_blocks",
+      "model": "page"
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    },
+    "unpublished": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

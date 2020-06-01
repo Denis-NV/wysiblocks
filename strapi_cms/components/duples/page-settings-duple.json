@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_duples_page_settings_duples",
+  "info": {
+    "name": "Page Settings Duple",
+    "icon": "pause"
+  },
+  "options": {},
+  "attributes": {
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.page-data-set",
+      "required": true
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.page-data-set",
+      "required": true
+    }
+  }
+}

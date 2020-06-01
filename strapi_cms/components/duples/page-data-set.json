@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_duples_page_data_sets",
+  "info": {
+    "name": "Page Data Set",
+    "icon": "pager"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "header_hidden": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "footer_hidden": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}
