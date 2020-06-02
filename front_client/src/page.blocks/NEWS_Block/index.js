@@ -14,7 +14,7 @@ import { navigateTo, updateBlock } from "../../redux/actions/LocalActions";
 // GraphQL
 import { NEWS } from "../../queries";
 import { NEWS_FEED } from "../../queries";
-import { Query } from "@apollo/react-components";
+import { Query } from "react-apollo";
 
 // CSS and MUI
 import styled from "styled-components";

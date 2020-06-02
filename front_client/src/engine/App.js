@@ -3,43 +3,41 @@ import PropTypes from "prop-types";
 
 // Redux
 // import { setUser } from "./redux/actions/UserActions";
+import Store from "../redux/Store";
 import { connect } from "react-redux";
-import { setSiteData } from "../redux/actions/LocalActions";
 import { loadGoogleFont } from "../redux/actions/RemoteActions";
-import { setAdminMode } from "../redux/actions/UserActions";
 
 // Apollo
-import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
-import { onError } from "apollo-link-error";
-import { ApolloLink } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import {
+  from,
+  ApolloClient,
+  HttpLink,
+  InMemoryCache,
+  ApolloProvider,
+  ApolloLink,
+  useQuery,
+} from "@apollo/client";
 
 // GraphGL
-import { ApolloProvider } from "react-apollo";
-import { SITE_DATA } from "../queries";
+import { LIVE_SITE_DATA } from "../queries";
 
 // Keycloak
 import Keycloak from "keycloak-js";
 import { KeycloakProvider } from "@react-keycloak/web";
 
 // CSS & MUI
-import { StylesProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import styled from "styled-components";
 import GlobalStyles from "../styles";
 
-import styled from "styled-components";
-
+import { StylesProvider } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 // Components
 import Page from "./Page";
 import Editor from "./Editor";
-
-import GraphQLLazyQuery from "../.common/GraphQLLazyQuery";
 
 /*
  *   ******************
@@ -55,33 +53,29 @@ const keycloak = new Keycloak({
 });
 
 // Apollo Setup
-export const client = new ApolloClient({
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext(({ headers }) => ({
+    headers: {
+      ...headers,
+      Authorization: Store.getState().User.id_token
+        ? `Bearer ${Store.getState().User.id_token}`
+        : "",
+    },
+  }));
+  return forward(operation);
+});
+
+const link = from([
+  authLink,
+  new HttpLink({
+    uri: window._env_.REACT_APP_GRAPHQL,
+    credentials: "same-origin",
+  }),
+]);
+
+const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: ApolloLink.from([
-    onError(({ graphQLErrors, networkError }) => {
-      if (graphQLErrors)
-        graphQLErrors.forEach(({ message, locations, path }) =>
-          console.log(
-            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-          )
-        );
-      if (networkError) console.log(`[Network error]: ${networkError}`);
-    }),
-    setContext((_, { headers }) => {
-      return {
-        headers: {
-          ...headers,
-          // Authorization: store.getState().User.id_token
-          //   ? `Bearer ${store.getState().User.id_token}`
-          //   : "",
-        },
-      };
-    }),
-    new HttpLink({
-      uri: window._env_.REACT_APP_GRAPHQL,
-      credentials: "same-origin",
-    }),
-  ]),
+  link,
 });
 
 /*
@@ -90,34 +84,26 @@ export const client = new ApolloClient({
  *   ******************
  */
 
-const App = ({
-  site: { site_id, site_blocks, pages, font_is_ready },
-  theme_reducer,
-  setSiteData,
-  setAdminMode,
-  loadGoogleFont,
-}) => {
+const App = ({ site: { font_is_ready }, theme_reducer, loadGoogleFont }) => {
   const theme = createMuiTheme(theme_reducer);
-
-  let getSiteData = () => {};
 
   // Hooks
   const [initialized, setInitialized] = React.useState(false);
-  const site_data_requested = React.useRef();
 
-  // React.useLayoutEffect(() => {
-  //   if (!site_blocks && initialized) {
-  //     if (!site_data_requested.current) {
-  //       //site_data_requested.current = true;
-  //       //getSiteData();
-  //     }
-  //   }
-  // }, [initialized, site_blocks]);
+  // {font_is_ready && (
+  //   <>
+  //     <Page
+  //       site_blocks_data={site_blocks}
+  //       content_pages_data={pages}
+  //     />
+  //     <Editor />
+  //   </>
+  // )}
 
   // Handlers
   const onKeycloakEvent = (event, error) => {
     console.log("onKeycloakEvent", event, error || "No errors");
-    console.log(keycloak);
+    // console.log(keycloak);
 
     setInitialized(true);
   };
@@ -129,6 +115,23 @@ const App = ({
   };
 
   // Render
+  const SiteBlocks = (props) => {
+    const { loading, error, data } = useQuery(LIVE_SITE_DATA, {
+      variables: { role: window._env_.REACT_APP_SITE_ROLE },
+    });
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+
+    return data.sites[0].site_blocks.map(({ type, component }, index) => (
+      <div key={index}>
+        <p>
+          {type}: {component}
+        </p>
+      </div>
+    ));
+  };
+
   return (
     <KeycloakProvider
       keycloak={keycloak}
@@ -145,30 +148,7 @@ const App = ({
           <ThemeProvider theme={theme}>
             <GlobalStyles theme={theme} />
             {initialized ? (
-              <GraphQLLazyQuery
-                setQueryTrigger={(trigger) => (getSiteData = trigger)}
-                QUERY={SITE_DATA}
-                variables={{ id: site_id }}
-                completeCb={(data) => {
-                  setSiteData(data);
-                  setAdminMode(data.siteItem.isAdmin);
-                  loadGoogleFont(theme);
-
-                  site_data_requested.current = false;
-                }}
-                LoadingComp={<ProgressBar variant="query" color="primary" />}
-                ErrorComp={null}
-              >
-                {font_is_ready && site_blocks && (
-                  <>
-                    <Page
-                      site_blocks_data={site_blocks}
-                      content_pages_data={pages}
-                    />
-                    <Editor />
-                  </>
-                )}
-              </GraphQLLazyQuery>
+              <SiteBlocks />
             ) : (
               <ProgressBar variant="query" color="primary" />
             )}
@@ -181,8 +161,6 @@ const App = ({
 
 App.propTypes = {
   site: PropTypes.object.isRequired,
-  setSiteData: PropTypes.func.isRequired,
-  setAdminMode: PropTypes.func.isRequired,
   loadGoogleFont: PropTypes.func.isRequired,
 };
 
@@ -194,8 +172,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapActionsToProps = {
-  setSiteData,
-  setAdminMode,
   loadGoogleFont,
 };
 

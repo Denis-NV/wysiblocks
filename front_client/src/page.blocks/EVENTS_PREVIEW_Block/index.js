@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { navigateTo, updateBlock } from "../../redux/actions/LocalActions";
 
 // GraphQL
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/client";
 import { EVENT_FEED } from "../../queries";
 
 // CSS

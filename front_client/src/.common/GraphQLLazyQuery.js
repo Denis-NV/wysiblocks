@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // GraphQL
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/client";
 
 const GraphQLLazyQuery = (props) => {
   const {

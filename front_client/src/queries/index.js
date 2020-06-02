@@ -1,37 +1,60 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 // Queries
+export const LIVE_SITE_DATA = gql`
+  query($role: String) {
+    sites(where: { role: $role }) {
+      settings {
+        live {
+          title
+          theme
+        }
+      }
 
-export const SITE_DATA = gql`
-  query($id: ID!) {
-    siteItem(id: $id) {
-      theme
-      isAdmin
-      site_blockList {
-        id
-        site_id
-        order
-        component
+      site_blocks {
         type
-        options
-      }
-      navList {
-        id
-        to
-        name
-        lft
-        rgt
-      }
-      pageList {
-        id
-        uri
-        title
-        header_hidden
-        footer_hidden
+        component
+        settings {
+          live {
+            order
+            custom_map
+          }
+        }
       }
     }
   }
 `;
+
+// export const SITE_DATA = gql`
+//   query($id: ID!) {
+//     siteItem(id: $id) {
+//       theme
+//       isAdmin
+//       site_blockList {
+//         id
+//         site_id
+//         order
+//         component
+//         type
+//         options
+//       }
+//       navList {
+//         id
+//         to
+//         name
+//         lft
+//         rgt
+//       }
+//       pageList {
+//         id
+//         uri
+//         title
+//         header_hidden
+//         footer_hidden
+//       }
+//     }
+//   }
+// `;
 
 export const PAGE_DATA = gql`
   query($pageId: Int!, $first_pr: Int!) {

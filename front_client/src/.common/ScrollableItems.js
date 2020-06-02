@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 // GraphQL
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/client";
 
 // CSS
 import styled from "styled-components";
@@ -34,18 +34,18 @@ const ScrollableItems = ({ site, children, feed, updateCallback }) => {
   }, [pagination.current.cursor]);
 
   // GraphQL handlers
-  const onBlockFeedLoaded = data => {
+  const onBlockFeedLoaded = (data) => {
     const [cursor, end] = updateCallback(data);
 
     pagination.current.end = end;
     pagination.current.cursor = Math.min(cursor, end);
   };
 
-  const onBlockFeedError = error => {
+  const onBlockFeedError = (error) => {
     console.log(`Error! ${error.message}`);
   };
 
-  const onScroll = y => {
+  const onScroll = (y) => {
     if (
       window.innerHeight -
         y +
@@ -60,7 +60,7 @@ const ScrollableItems = ({ site, children, feed, updateCallback }) => {
 
   const [getBlocks, { loading }] = useLazyQuery(feed, {
     onCompleted: onBlockFeedLoaded,
-    onError: onBlockFeedError
+    onError: onBlockFeedError,
   });
 
   // Scroll HOOK and logic
@@ -74,8 +74,8 @@ const ScrollableItems = ({ site, children, feed, updateCallback }) => {
         variables: {
           site_id: site.site_id,
           fromIndex: pagination.current.cursor,
-          first: theme.custom.itemFeed.first
-        }
+          first: theme.custom.itemFeed.first,
+        },
       });
     }
   }
@@ -93,12 +93,12 @@ const ScrollableItems = ({ site, children, feed, updateCallback }) => {
 ScrollableItems.propTypes = {
   site: PropTypes.object.isRequired,
   feed: PropTypes.object.isRequired,
-  updateCallback: PropTypes.func.isRequired
+  updateCallback: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    site: state.Site
+    site: state.Site,
   };
 };
 
