@@ -15,19 +15,19 @@ services:
     networks:
       - backend
 
-  # A GUI for MySqlDB
-  adminer:
-    image: adminer:4.7
-    container_name: wysiblocks_mysqladminer
-    restart: unless-stopped
-    environment:
-      - ADMINER_DEFAULT_SERVER=mysqldb
-    ports:
-      - 8082:8080
-    depends_on:
-      - mysqldb
-    networks:
-      - backend
+  # # A GUI for MySqlDB
+  # adminer:
+  #   image: adminer:4.7
+  #   container_name: wysiblocks_mysqladminer
+  #   restart: unless-stopped
+  #   environment:
+  #     - ADMINER_DEFAULT_SERVER=mysqldb
+  #   ports:
+  #     - 8082:8080
+  #   depends_on:
+  #     - mysqldb
+  #   networks:
+  #     - backend
 
   # Standalone authentication server
   keycloak:
@@ -52,6 +52,7 @@ services:
       - DB_PASSWORD=user_stories_keycloak
     networks:
       - backend
+      - frontend
 
   # Database, sgared between strapi and core API
   mongodb:
@@ -120,7 +121,7 @@ services:
       - ./strapi_cms/hooks:/app/hooks/
       - ./strapi_cms/middlewares:/app/middlewares/
       - ./strapi_cms/plugins:/app/plugins/
-      - ./strapi_cms/.eslintrc:/app/eslintrc
+      - ./strapi_cms/.eslintrc:/app/.eslintrc
       - ./strapi_cms/favicon.ico:/app/favicon.ico
       - strapi_public:/app/public/
     ports:
@@ -136,6 +137,7 @@ services:
       - CHOKIDAR_USEPOLLING="true"
     networks:
       - backend
+      - frontend
 
   # # Core Wysiblocks engine API
   # core_api:
@@ -164,9 +166,37 @@ services:
   #     # - frontend
   #     - backend
 
+  front_client:
+    stdin_open: true
+    container_name: wysiblocks_front_client
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - strapi_cms
+      - keycloak
+    image: denisnv/wysiblocks_front_client:dev
+    build:
+      context: ./front_client/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./front_client/.env:/app/.env
+      - ./front_client/public:/app/public/
+      - ./front_client/src:/app/src/
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_KEYCLOAK_BASE_URL=http://localhost:8080
+      - REACT_APP_KEYCLOAK_REALM=wysiblocks
+      - REACT_APP_KEYCLOAK_CLIENT_ID=front_client
+      - REACT_APP_GRAPHQL=http://localhost:1337/graphql
+      - REACT_APP_SITE_ROLE=development
+      - REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyAVRPSPAjvq-eLUhaMZiOUanqVirxCkrmk
+    networks:
+      - frontend
+
 networks:
-  # frontend:
-  #   driver: bridge
+  frontend:
+    driver: bridge
   backend:
     driver: bridge
 

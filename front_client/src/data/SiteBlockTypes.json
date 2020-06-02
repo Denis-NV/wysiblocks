@@ -1,0 +1,31 @@
+[
+  {
+    "component": "SIMPLE_NAV_Header_001",
+    "type": "header",
+    "menu": {
+      "title": "Original Header",
+      "description": "",
+      "image": "",
+      "category": "",
+      "tags": ""
+    },
+    "init_data": {
+      "logo_img_url": "https://freightnex.co.in/wp-content/uploads/2019/02/cropped-Site-Logo.png",
+      "logo_img_alt": "Logo"
+    }
+  },
+  {
+    "component": "SIMPLE_Footer_001",
+    "type": "footer",
+    "menu": {
+      "title": "Simple Footer",
+      "description": "",
+      "image": "",
+      "category": "",
+      "tags": ""
+    },
+    "init_data": {
+      "height": 120
+    }
+  }
+]
