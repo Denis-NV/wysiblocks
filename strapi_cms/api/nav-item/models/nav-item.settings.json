@@ -26,6 +26,10 @@
       "repeatable": false,
       "component": "duples.nav-item-settings-duple",
       "required": true
+    },
+    "site": {
+      "via": "nav_items",
+      "model": "site"
     }
   }
 }

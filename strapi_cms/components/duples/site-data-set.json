@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_duples_site_data_sets",
+  "info": {
+    "name": "Site Data Set",
+    "icon": "border-all"
+  },
+  "options": {},
+  "attributes": {
+    "theme": {
+      "type": "json"
+    },
+    "title": {
+      "type": "string",
+      "default": "Wysiblocks"
+    }
+  }
+}

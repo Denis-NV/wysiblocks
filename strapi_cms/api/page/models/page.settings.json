@@ -32,6 +32,14 @@
     "unpublished": {
       "type": "boolean",
       "default": false
+    },
+    "protected": {
+      "type": "boolean",
+      "default": false
+    },
+    "site": {
+      "via": "pages",
+      "model": "site"
     }
   }
 }

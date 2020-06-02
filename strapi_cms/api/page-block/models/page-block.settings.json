@@ -31,6 +31,10 @@
     "unpublished": {
       "type": "boolean",
       "default": false
+    },
+    "site": {
+      "via": "page_blocks",
+      "model": "site"
     }
   }
 }

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "site_blocks",
+  "info": {
+    "name": "Site Block"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "settings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.settings-duple"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "header",
+        "footer",
+        "content"
+      ],
+      "required": true,
+      "unique": true
+    },
+    "component": {
+      "type": "string",
+      "required": true
+    },
+    "site": {
+      "via": "site_blocks",
+      "model": "site"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sites",
+  "info": {
+    "name": "site"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "production",
+        "staging",
+        "development"
+      ],
+      "required": true,
+      "unique": true
+    },
+    "settings": {
+      "type": "component",
+      "repeatable": false,
+      "component": "duples.site-settings-duple",
+      "required": true
+    },
+    "nav_items": {
+      "collection": "nav-item",
+      "via": "site"
+    },
+    "pages": {
+      "collection": "page",
+      "via": "site"
+    },
+    "page_blocks": {
+      "collection": "page-block",
+      "via": "site"
+    },
+    "site_blocks": {
+      "collection": "site-block",
+      "via": "site"
+    }
+  }
+}
