@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux
 import { useDispatch } from "react-redux";
-import { SET_CURRENT_PATH } from "../../redux/Types";
+import { SET_CURRENT_ADDRESS } from "../../redux/Types";
 
 // Utils
 import { Helmet } from "react-helmet";
@@ -12,20 +12,21 @@ import { Helmet } from "react-helmet";
 import Content from "../Content";
 
 const Route = (props) => {
-  const { path, page_data, className } = props;
+  const { path, cur_data_key, page_data, className } = props;
+  const page_setting = page_data.settings[cur_data_key];
 
   // Hooks
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    dispatch({ type: SET_CURRENT_PATH, payload: path });
+    dispatch({ type: SET_CURRENT_ADDRESS, payload: path });
   }, [path, dispatch]);
 
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{page_data.title}</title>
+        <title>{page_setting.title}</title>
       </Helmet>
       <Content page_data={page_data} className={className} />
     </>
@@ -34,6 +35,7 @@ const Route = (props) => {
 
 Route.propTypes = {
   path: PropTypes.string.isRequired,
+  cur_data_key: PropTypes.string.isRequired,
   page_data: PropTypes.object.isRequired,
 };
 

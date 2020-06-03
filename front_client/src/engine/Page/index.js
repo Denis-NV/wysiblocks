@@ -20,19 +20,25 @@ import Route from "../Route";
 
 // Default
 const Page = (props) => {
-  const { site_blocks_data, content_pages_data, site, nav, layout } = props;
+  const { site_blocks_data, content_pages_data, nav, layout, editor } = props;
 
-  const site_blocks = Object.entries(site_blocks_data)
-    .map(([, value]) => value)
-    .sort((a, b) => a.block_data.order - b.block_data.order);
+  const site_blocks = site_blocks_data
+    .map((site_block) => ({ ...site_block }))
+    .sort(
+      (a, b) =>
+        a.settings[editor.cur_key].order - b.settings[editor.cur_key].order
+    );
 
-  const cur_page_dupple = Object.entries(site.pages).find(
-    ([, value]) => value.uri === nav.current_path
+  const cur_page = content_pages_data.find(
+    (page) => page.uri === nav.current_address
   );
-  const cur_page = cur_page_dupple ? cur_page_dupple[1] : null;
 
-  const header_hidden = cur_page ? cur_page.header_hidden : true;
-  const footer_hidden = cur_page ? cur_page.footer_hidden : true;
+  const header_hidden = cur_page
+    ? cur_page.settings[editor.cur_key].header_hidden
+    : true;
+  const footer_hidden = cur_page
+    ? cur_page.settings[editor.cur_key].footer_hidden
+    : true;
 
   const header_height = header_hidden ? 0 : layout.header_height;
 
@@ -42,31 +48,34 @@ const Page = (props) => {
   // Render
   return (
     <MainContainer>
-      {site_blocks.map((block_data_set, index) => {
+      {site_blocks.map((site_block, index) => {
         let BlockComponent = null;
-
-        switch (block_data_set.block_data.type) {
+        // TODO: add conditions for is_deleted"
+        switch (site_block.type) {
           case "header":
             BlockComponent = (
               <React.Fragment key={index}>
-                {!header_hidden && <Header block_data_set={block_data_set} />}
+                {!header_hidden && <Header site_block={site_block} />}
               </React.Fragment>
             );
             break;
           case "content":
             BlockComponent = (
               <React.Fragment key={index}>
-                {content_pages_data &&
-                Object.entries(content_pages_data).length > 0 ? (
+                {content_pages_data && content_pages_data.length > 0 ? (
                   <Router>
-                    {Object.entries(content_pages_data).map(([key, value]) => (
-                      <PageRoute
-                        header_height={header_height}
-                        key={key}
-                        path={value.uri}
-                        page_data={value}
-                      />
-                    ))}
+                    {content_pages_data.map((content_page_data, ind) => {
+                      // TODO: add conditions for "is_live", "is_deleted", "unpublished", "protected"
+                      return (
+                        <PageRoute
+                          header_height={header_height}
+                          cur_data_key={editor.cur_key}
+                          key={ind}
+                          path={content_page_data.uri}
+                          page_data={content_page_data}
+                        />
+                      );
+                    })}
                   </Router>
                 ) : (
                   <Message theme={theme} header_height={header_height}>
@@ -81,7 +90,7 @@ const Page = (props) => {
           case "footer":
             BlockComponent = (
               <React.Fragment key={index}>
-                {!footer_hidden && <Footer block_data_set={block_data_set} />}
+                {!footer_hidden && <Footer site_block={site_block} />}
               </React.Fragment>
             );
             break;
@@ -96,15 +105,15 @@ const Page = (props) => {
 };
 
 Page.propTypes = {
-  content_pages_data: PropTypes.object.isRequired,
-  site_blocks_data: PropTypes.object.isRequired,
+  content_pages_data: PropTypes.array.isRequired,
+  site_blocks_data: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    site: state.Site,
     nav: state.Nav,
     layout: state.Layout,
+    editor: state.Editor,
   };
 };
 

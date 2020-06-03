@@ -17,7 +17,7 @@ import SiteBlockTypes from "../../.common/LeftDrawer/SiteBlockTypes";
 
 // Deafault
 const Footer = (props) => {
-  const { block_data_set, className, editor, replaceSiteBlock } = props;
+  const { site_block, className, editor, replaceSiteBlock } = props;
 
   // Hooks
   const theme = useTheme();
@@ -55,7 +55,7 @@ const Footer = (props) => {
                     type="footer"
                     closeCallback={() => setShowEditorDraw(false)}
                     actionCallback={(item) => {
-                      replaceSiteBlock(item, block_data_set.id);
+                      replaceSiteBlock(item, site_block.id);
                     }}
                   />
                 ) : (
@@ -66,7 +66,7 @@ const Footer = (props) => {
         </>
       )}
       {React.useMemo(() => {
-        const component = block_data_set.block_data.component;
+        const component = site_block.component;
 
         if (component) {
           SpecializedFooter.current =
@@ -76,7 +76,8 @@ const Footer = (props) => {
           return (
             <React.Suspense fallback={null}>
               <SpecializedFooter.current
-                block_data_set={block_data_set}
+                site_block={site_block}
+                cur_data_key={editor.cur_key}
                 showEditorCb={() => setShowEditorDraw(true)}
                 hideEditorCb={() => setShowEditorDraw(false)}
                 setEditorContent={(cont) => {
@@ -88,18 +89,18 @@ const Footer = (props) => {
         } else {
           console.log(
             "NO SITE BLOCK COMPONENT HAD BEEN PROVIDED!!!",
-            block_data_set.id,
-            block_data_set.type
+            site_block.id,
+            site_block.type
           );
           return null;
         }
-      }, [block_data_set])}
+      }, [site_block, editor.cur_key])}
     </MainContainer>
   );
 };
 
 Footer.propTypes = {
-  block_data_set: PropTypes.object.isRequired,
+  site_block: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {

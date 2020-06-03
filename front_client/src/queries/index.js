@@ -16,6 +16,7 @@ export const SITE_DATA = gql`
       }
 
       site_blocks {
+        id
         type
         component
         is_deleted
@@ -27,6 +28,29 @@ export const SITE_DATA = gql`
           draft @skip(if: $live) {
             order
             custom_map
+          }
+        }
+      }
+
+      pages {
+        id
+        uri
+        is_live
+        is_deleted
+        unpublished
+        protected
+
+        settings {
+          live @skip(if: $draft) {
+            title
+            header_hidden
+            footer_hidden
+          }
+
+          draft @skip(if: $live) {
+            title
+            header_hidden
+            footer_hidden
           }
         }
       }

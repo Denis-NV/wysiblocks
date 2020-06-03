@@ -44,7 +44,7 @@ export const togglePageLock = (lock = true) => (dispatch, getState) => {
 
   if (lock) {
     const locked_page = Object.entries(site.pages).find(
-      ([, value]) => value.uri === nav.current_path
+      ([, value]) => value.uri === nav.current_address
     );
 
     if (locked_page) {
@@ -55,7 +55,7 @@ export const togglePageLock = (lock = true) => (dispatch, getState) => {
     } else {
       console.log(
         "WARNING!!! Current page ",
-        nav.current_path,
+        nav.current_address,
         "does NOT exist!"
       );
 

@@ -26,7 +26,7 @@ const SIMPLE_NAV_Header_001 = (props) => {
     updateSiteBlock,
   } = props;
 
-  const page_pathname = nav.current_path.replace(`/:${route_id_var}`, "");
+  const page_pathname = nav.current_address.replace(`/:${route_id_var}`, "");
   const nav_data = site.nav || [];
 
   return (

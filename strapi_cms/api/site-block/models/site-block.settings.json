@@ -12,7 +12,8 @@
     "settings": {
       "type": "component",
       "repeatable": false,
-      "component": "duples.settings-duple"
+      "component": "duples.settings-duple",
+      "required": true
     },
     "type": {
       "type": "enumeration",

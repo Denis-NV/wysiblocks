@@ -11,7 +11,7 @@ import { MainContainer, ContentContainer } from "./styles";
 const index = (props) => {
   const { site, nav, theme } = props;
 
-  const page_pathname = nav.current_path.replace(`/:${route_id_var}`, "");
+  const page_pathname = nav.current_address.replace(`/:${route_id_var}`, "");
   const nav_data = site.nav || [];
 
   console.log(page_pathname, nav_data);

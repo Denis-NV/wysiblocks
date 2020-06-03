@@ -119,7 +119,7 @@ const NEWS_Block = ({
                       onClick={(e) => {
                         e.preventDefault();
 
-                        navigateTo(`${nav.current_path}/${block.uri}`);
+                        navigateTo(`${nav.current_address}/${block.uri}`);
                       }}
                     >
                       {block.title}
@@ -141,7 +141,7 @@ const NEWS_Block = ({
     navigateTo,
     options,
     theme,
-    nav.current_path,
+    nav.current_address,
     page_id,
     block_id,
     updateBlock,

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 // Redux
 import { connect } from "react-redux";
@@ -95,26 +94,16 @@ const App = (props) => {
   const [initialized, setInitialized] = React.useState(false);
   const [fonts_loaded, setFontsLoaded] = React.useState(false);
 
-  // {font_is_ready && (
-  //   <>
-  //     <Page
-  //       site_blocks_data={site_blocks}
-  //       content_pages_data={pages}
-  //     />
-  //     <Editor />
-  //   </>
-  // )}
-
   // Handlers
   const onKeycloakEvent = (event, error) => {
-    console.log("onKeycloakEvent", event, error || "No errors");
-    console.dir(keycloak);
+    // console.log("onKeycloakEvent", event, error || "No errors");
+    // console.dir(keycloak);
 
     setInitialized(true);
   };
 
   const onKeycloakTokens = (tokens) => {
-    console.log("onKeycloakTokens", tokens);
+    // console.log("onKeycloakTokens", tokens);
 
     setUser(tokens.token, tokens.idToken);
   };
@@ -182,14 +171,15 @@ const App = (props) => {
     return (
       <ThemeProvider theme={theme}>
         <GlobalStyles theme={theme} />
-        {fonts_loaded &&
-          site_data.site_blocks.map(({ type, component }, index) => (
-            <div key={index}>
-              <p>
-                {type}: {component}
-              </p>
-            </div>
-          ))}
+        {fonts_loaded && (
+          <>
+            <Page
+              site_blocks_data={site_data.site_blocks}
+              content_pages_data={site_data.pages}
+            />
+            <Editor />
+          </>
+        )}
       </ThemeProvider>
     );
   };
@@ -212,11 +202,6 @@ const App = (props) => {
       </ApolloProvider>
     </KeycloakProvider>
   );
-};
-
-App.propTypes = {
-  editor: PropTypes.object.isRequired,
-  setUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {

@@ -1,5 +1,5 @@
 // Site
-export const SET_CURRENT_PATH = "SET_CURRENT_PATH";
+export const SET_CURRENT_ADDRESS = "SET_CURRENT_ADDRESS";
 export const SET_LOCKED_PAGE_ID = "SET_LOCKED_PAGE_ID";
 export const SET_SITE_DATA = "SET_SITE_DATA";
 export const SET_SITE_EDIT_MODE = "SET_SITE_EDIT_MODE";

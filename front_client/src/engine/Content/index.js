@@ -34,7 +34,7 @@ const Content = (props) => {
     if (!page_data_requested.current && !page.page_blocks[page_data.id]) {
       page_data_requested.current = true;
 
-      getPageData();
+      //getPageData();
     }
   }, [page_data.id, page.page_blocks]);
 
