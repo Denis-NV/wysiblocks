@@ -3,10 +3,10 @@ import React from "react";
 // Redux
 import { connect } from "react-redux";
 
-import Store from "../redux/Store";
+// import Store from "../redux/Store";
 import { setUser } from "../redux/actions/UserActions";
 
-// Apollo
+// Apollo GraphGL
 import {
   from,
   ApolloClient,
@@ -17,7 +17,6 @@ import {
   useQuery,
 } from "@apollo/client";
 
-// GraphGL
 import { SITE_DATA } from "../queries";
 
 // Keycloak
@@ -59,9 +58,9 @@ const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers }) => ({
     headers: {
       ...headers,
-      Authorization: Store.getState().User.id_token
-        ? `Bearer ${Store.getState().User.id_token}`
-        : "",
+      // Authorization: Store.getState().User.id_token
+      //   ? `Bearer ${Store.getState().User.id_token}`
+      //   : "",
     },
   }));
   return forward(operation);

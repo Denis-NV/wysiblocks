@@ -22,14 +22,17 @@ const Route = (props) => {
     dispatch({ type: SET_CURRENT_ADDRESS, payload: path });
   }, [path, dispatch]);
 
-  return (
-    <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{page_setting.title}</title>
-      </Helmet>
-      <Content page_data={page_data} className={className} />
-    </>
+  return React.useMemo(
+    () => (
+      <>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{page_setting.title}</title>
+        </Helmet>
+        <Content page_data={page_data} className={className} />
+      </>
+    ),
+    [page_data, className, page_setting.title]
   );
 };
 

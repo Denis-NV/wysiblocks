@@ -16,7 +16,7 @@ import LeftDrawer from "../../.common/LeftDrawer";
 
 //
 const Block = (props) => {
-  const { editor, block_data_set, page_id, page_item_id, className } = props;
+  const { editor, block_data, page_id, page_item_id, className } = props;
 
   // Hooks
   const theme = useTheme();
@@ -44,7 +44,7 @@ const Block = (props) => {
             <EditContainer theme={theme}>
               {EditorContent.current && (
                 <EditorContent.current
-                  block_data_set={block_data_set}
+                  block_data={block_data}
                   page_id={page_id}
                   hideEditorDraw={() => setShowEditorDraw(false)}
                 />
@@ -53,14 +53,14 @@ const Block = (props) => {
           </LeftDrawer>
           <ContentBlockInstruments
             page_id={page_id}
-            blockId={block_data_set.id}
+            blockId={block_data.id}
             showEditorDraw={() => setShowEditorDraw(true)}
           />
         </>
       ) : null}
 
       {React.useMemo(() => {
-        const component = block_data_set.block_data.component;
+        const component = block_data.component;
 
         if (component) {
           SpecializedBlock.current =
@@ -71,8 +71,9 @@ const Block = (props) => {
             <React.Suspense fallback={<BlockSkeleton />}>
               <SpecializedBlock.current
                 page_id={page_id}
-                block_data_set={block_data_set}
+                block_data={block_data}
                 page_item_id={page_item_id}
+                cur_data_key={editor.cur_key}
                 showEditorDraw={() => setShowEditorDraw(true)}
                 hideEditorDraw={() => setShowEditorDraw(false)}
                 setEditorContent={(cont) => {
@@ -84,19 +85,19 @@ const Block = (props) => {
         } else {
           console.log(
             "NO PAGE BLOCK COMPONENT HAD BEEN PROVIDED!!!",
-            block_data_set.id,
-            block_data_set.type
+            block_data.id,
+            block_data.type
           );
           return null;
         }
-      }, [block_data_set, page_item_id, page_id])}
+      }, [block_data, page_item_id, page_id, editor.cur_key])}
     </MainContainer>
   );
 };
 
 Block.propTypes = {
   editor: PropTypes.object.isRequired,
-  block_data_set: PropTypes.object.isRequired,
+  block_data: PropTypes.object.isRequired,
   page_id: PropTypes.string.isRequired,
   page_item_id: PropTypes.string,
 };

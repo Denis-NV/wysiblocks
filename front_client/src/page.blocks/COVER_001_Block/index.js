@@ -22,9 +22,15 @@ import EditableTextfield from "../../.common/EditableTextfield";
 import EditableBgImage from "../../.common/EditableBgImage";
 
 const COVER_001_Block = (props) => {
-  const { block_data_set, page_id, updateBlock, setEditorContent } = props;
-  const options = block_data_set.options_data;
-  const block_id = block_data_set.id.toString();
+  const {
+    block_data,
+    page_id,
+    updateBlock,
+    setEditorContent,
+    cur_data_key,
+  } = props;
+  const options = block_data.settings[cur_data_key].custom_map;
+  const block_id = block_data.id;
 
   // Hooks
   const theme = useTheme();
@@ -45,7 +51,7 @@ const COVER_001_Block = (props) => {
   };
 
   const EditorContent = ({
-    block_data_set: {
+    block_data: {
       options_data: { is_secondary, bg_opacity },
     },
   }) => (
@@ -121,7 +127,7 @@ const COVER_001_Block = (props) => {
 };
 
 COVER_001_Block.propTypes = {
-  block_data_set: PropTypes.object.isRequired,
+  block_data: PropTypes.object.isRequired,
 };
 
 export default connect(null, { updateBlock })(COVER_001_Block);

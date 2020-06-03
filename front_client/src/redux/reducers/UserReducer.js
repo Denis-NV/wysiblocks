@@ -9,7 +9,7 @@ const initialState = {
   token: "",
   id_token: "",
   profile: {},
-  is_admin: false,
+  is_admin: true,
   calls_applications: {},
   shopping_calls_applications: {},
 };

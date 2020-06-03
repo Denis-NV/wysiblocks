@@ -128,10 +128,6 @@ const EditingUI = ({
     setState({ ...state, [type]: false });
   };
 
-  const temporary_hide =
-    !document.location.origin.includes("localhost") &&
-    !document.location.origin.includes("beta");
-
   // Render
   return (
     <MainContainer>
@@ -168,57 +164,55 @@ const EditingUI = ({
           closeCallback={() => onDrawerClose("settings_open")}
         />
       </LeftDrawer>
-      {!temporary_hide && (
-        <div>
-          <AdminBtn
-            color="secondary"
-            aria-label="admin"
+      <div>
+        <AdminBtn
+          color="secondary"
+          aria-label="admin"
+          size="medium"
+          onClick={onAdminPressed}
+        >
+          <KeyIcon />
+        </AdminBtn>
+        {profile.preferred_username && is_admin && (
+          <EditToggle
+            color="default"
+            aria-label="edit"
             size="medium"
-            onClick={onAdminPressed}
+            onClick={onEditModetoggle}
           >
-            <KeyIcon />
-          </AdminBtn>
-          {profile.preferred_username && is_admin && (
-            <EditToggle
-              color="default"
-              aria-label="edit"
-              size="medium"
-              onClick={onEditModetoggle}
-            >
-              <Switch
-                checked={is_edit_mode}
-                color="secondary"
-                value="Edit"
-                inputProps={{ "aria-label": "secondary checkbox" }}
-              />
-            </EditToggle>
-          )}
-          {is_edit_mode && (
-            <>
-              <SettingsBtn
-                color="secondary"
-                aria-label="settings"
-                size="medium"
-                onClick={onSettingsClicked}
-              >
-                <SettingsIcon />
-              </SettingsBtn>
-            </>
-          )}
-          {locked_page_id !== "" && (
-            <SaveBtn
+            <Switch
+              checked={is_edit_mode}
               color="secondary"
-              aria-label="save"
+              value="Edit"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            />
+          </EditToggle>
+        )}
+        {is_edit_mode && (
+          <>
+            <SettingsBtn
+              color="secondary"
+              aria-label="settings"
               size="medium"
-              onClick={(e) => {
-                commitPageEdits();
-              }}
+              onClick={onSettingsClicked}
             >
-              <PublishIcon />
-            </SaveBtn>
-          )}
-        </div>
-      )}
+              <SettingsIcon />
+            </SettingsBtn>
+          </>
+        )}
+        {locked_page_id !== "" && (
+          <SaveBtn
+            color="secondary"
+            aria-label="save"
+            size="medium"
+            onClick={(e) => {
+              commitPageEdits();
+            }}
+          >
+            <PublishIcon />
+          </SaveBtn>
+        )}
+      </div>
     </MainContainer>
   );
 };

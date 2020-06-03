@@ -58,78 +58,73 @@ export const SITE_DATA = gql`
   }
 `;
 
-// export const SITE_DATA = gql`
-//   query($id: ID!) {
-//     siteItem(id: $id) {
-//       theme
-//       isAdmin
-//       site_blockList {
-//         id
-//         site_id
-//         order
-//         component
-//         type
-//         options
-//       }
-//       navList {
-//         id
-//         to
-//         name
-//         lft
-//         rgt
-//       }
-//       pageList {
-//         id
-//         uri
-//         title
-//         header_hidden
-//         footer_hidden
-//       }
-//     }
-//   }
-// `;
-
 export const PAGE_DATA = gql`
-  query($pageId: Int!, $first_pr: Int!) {
-    page_blockList(filters: { page_id: $pageId }) {
-      id
-      component
-      payload_ref
-      page_id
-      order
-      options
-      payload {
-        ... on NewsPayloadType {
-          id
-          type
-          newsFeed(first: $first_pr) {
-            nodes {
-              id
-              title
-              image
-              uri
-            }
+  query($id: ID!, $live: Boolean!, $draft: Boolean!) {
+    page(id: $id) {
+      page_blocks {
+        id
+        is_live
+        is_deleted
+        unpublished
+        component
+
+        settings {
+          live @skip(if: $draft) {
+            order
+            custom_map
           }
-        }
-        ... on EventPayloadType {
-          id
-          type
-          eventFeed(first: $first_pr) {
-            nodes {
-              id
-              title
-              uri
-              date
-              closes
-              location
-              country
-            }
+
+          draft @skip(if: $live) {
+            order
+            custom_map
           }
         }
       }
     }
   }
 `;
+
+// export const PAGE_DATA = gql`
+//   query($pageId: Int!, $first_pr: Int!) {
+//     page_blockList(filters: { page_id: $pageId }) {
+//       id
+//       component
+//       payload_ref
+//       page_id
+//       order
+//       options
+//       payload {
+//         ... on NewsPayloadType {
+//           id
+//           type
+//           newsFeed(first: $first_pr) {
+//             nodes {
+//               id
+//               title
+//               image
+//               uri
+//             }
+//           }
+//         }
+//         ... on EventPayloadType {
+//           id
+//           type
+//           eventFeed(first: $first_pr) {
+//             nodes {
+//               id
+//               title
+//               uri
+//               date
+//               closes
+//               location
+//               country
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export const NEWS_FEED = gql`
   query($fromIndex: Int!, $first: Int!, $tags: [String]) {

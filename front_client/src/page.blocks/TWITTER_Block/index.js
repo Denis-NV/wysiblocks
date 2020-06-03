@@ -25,9 +25,15 @@ import BlockBaseLayout from "../../.common/BlockBaseLayout";
 import EditableImage from "../../.common/EditableImage";
 
 const TWITTER_Block = (props) => {
-  const { block_data_set, page_id, updateBlock, setEditorContent } = props;
-  const block_id = block_data_set.id;
-  const options = block_data_set.options_data;
+  const {
+    block_data,
+    page_id,
+    updateBlock,
+    setEditorContent,
+    cur_data_key,
+  } = props;
+  const block_id = block_data.id;
+  const options = block_data.settings[cur_data_key].custom_map;
 
   // Hooks
   const theme = useTheme();
@@ -47,7 +53,7 @@ const TWITTER_Block = (props) => {
   };
 
   const EditorContent = ({
-    block_data_set: {
+    block_data: {
       options_data: { screenName, height },
     },
   }) => (
@@ -109,7 +115,7 @@ const TWITTER_Block = (props) => {
 
 TWITTER_Block.propTypes = {
   page_id: PropTypes.string.isRequired,
-  block_data_set: PropTypes.object.isRequired,
+  block_data: PropTypes.object.isRequired,
   updateBlock: PropTypes.func.isRequired,
 };
 
