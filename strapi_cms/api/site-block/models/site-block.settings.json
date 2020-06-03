@@ -29,8 +29,12 @@
       "required": true
     },
     "site": {
-      "via": "site_blocks",
-      "model": "site"
+      "model": "site",
+      "via": "site_blocks"
+    },
+    "is_deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

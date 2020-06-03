@@ -1,5 +1,4 @@
 import axios from "axios";
-import WebFont from "webfontloader";
 
 import {
   TOGGLE_DATA_SAVING_UI,
@@ -8,18 +7,11 @@ import {
   UPDATE_PAGES_DATA,
   UPDATE_NAV_DATA,
   SET_LOCKED_PAGE_ID,
-  UPDATE_THEME,
   RESET_BLOCKS_DATA,
   RESET_BLOCKS_TO_DELETE,
-  SET_FONT_STATUS,
 } from "../Types";
 
-import {
-  stripFields,
-  createIdLookup,
-  sortNav,
-  applyThemeSettings,
-} from "../../.common/DataUtils";
+import { stripFields, createIdLookup, sortNav } from "../../.common/DataUtils";
 
 import PageBlockTypes from "../../data/PageBlockTypes.json";
 import SiteBlockTypes from "../../data/SiteBlockTypes.json";
@@ -345,50 +337,21 @@ export const commitNavEdits = (new_nav) => (dispatch, getState) => {
  *
  */
 export const commitThemeEdits = (new_settings) => (dispatch, getState) => {
-  const site = getState().Site;
-  const theme = getState().Theme;
-
-  return axios
-    .patch(`${window._env_.REACT_APP_MAIN_API_URL}/site/${site.site_id}`, {
-      theme: btoa(JSON.stringify(new_settings)),
-    })
-    .then((res) => {
-      console.log("Theme Settings Successfully saved!:", new_settings);
-
-      const new_theme = applyThemeSettings(theme, new_settings);
-
-      dispatch({ type: UPDATE_THEME, payload: new_theme });
-      dispatch(loadGoogleFont(theme));
-    })
-    .catch((err) => console.log(err));
+  // const site = getState().Site;
+  // const theme = getState().Theme;
+  // return axios
+  //   .patch(`${window._env_.REACT_APP_MAIN_API_URL}/site/${site.site_id}`, {
+  //     theme: btoa(JSON.stringify(new_settings)),
+  //   })
+  //   .then((res) => {
+  //     console.log("Theme Settings Successfully saved!:", new_settings);
+  //     const new_theme = applyThemeSettings(theme, new_settings);
+  //     dispatch({ type: UPDATE_THEME, payload: new_theme });
+  //     dispatch(loadGoogleFont(theme));
+  //   })
+  //   .catch((err) => console.log(err));
 };
 
 /*
  *
  */
-export const loadGoogleFont = (theme) => (dispatch, getState) => {
-  const font_to_load = theme.typography.fontFamily
-    .split(",")[0]
-    .replace(/"/g, "")
-    .trim();
-
-  // Fonts
-  const fonts_config = {
-    classes: false,
-    timeout: 3000,
-    loading: () => {
-      //console.log("Font loading");
-    },
-    active: () => {
-      dispatch({ type: SET_FONT_STATUS, payload: true });
-    },
-    inactive: () => {
-      //console.log("Font inactive");
-    },
-    google: {
-      families: [`${font_to_load}:300,400,500,700`],
-    },
-  };
-
-  WebFont.load(fonts_config);
-};

@@ -2,6 +2,7 @@ import { SET_SITE_EDIT_MODE } from "../Types";
 
 const initialState = {
   is_edit_mode: false,
+  cur_key: "live",
 };
 
 export default function (state = initialState, action) {
@@ -11,8 +12,8 @@ export default function (state = initialState, action) {
     case SET_SITE_EDIT_MODE:
       return {
         ...state,
-        deleted_blocks: [],
         is_edit_mode: payload,
+        cur_key: payload ? "draft" : "live",
       };
     default:
       return state;

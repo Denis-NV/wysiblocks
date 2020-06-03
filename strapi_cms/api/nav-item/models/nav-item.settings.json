@@ -28,8 +28,12 @@
       "required": true
     },
     "site": {
-      "via": "nav_items",
-      "model": "site"
+      "model": "site",
+      "via": "nav_items"
+    },
+    "is_deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -33,8 +33,12 @@
       "default": false
     },
     "site": {
-      "via": "page_blocks",
-      "model": "site"
+      "model": "site",
+      "via": "page_blocks"
+    },
+    "is_deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

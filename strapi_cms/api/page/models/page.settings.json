@@ -38,8 +38,12 @@
       "default": false
     },
     "site": {
-      "via": "pages",
-      "model": "site"
+      "model": "site",
+      "via": "pages"
+    },
+    "is_deleted": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -1,11 +1,15 @@
 import { gql } from "@apollo/client";
 
 // Queries
-export const LIVE_SITE_DATA = gql`
-  query($role: String) {
+export const SITE_DATA = gql`
+  query($role: String, $live: Boolean!, $draft: Boolean!) {
     sites(where: { role: $role }) {
       settings {
-        live {
+        live @skip(if: $draft) {
+          title
+          theme
+        }
+        draft @skip(if: $live) {
           title
           theme
         }
@@ -14,8 +18,13 @@ export const LIVE_SITE_DATA = gql`
       site_blocks {
         type
         component
+        is_deleted
         settings {
-          live {
+          live @skip(if: $draft) {
+            order
+            custom_map
+          }
+          draft @skip(if: $live) {
             order
             custom_map
           }
