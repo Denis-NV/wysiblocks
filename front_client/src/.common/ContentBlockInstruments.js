@@ -106,7 +106,7 @@ export default connect(
 
 const MainContainer = styled.div`
   position: absolute;
-  z-index: ${(p) => p.theme.zIndex.blockInstruments};
+  z-index: ${(p) => p.theme.zIndex.block_instruments};
   background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
   height: 40px;

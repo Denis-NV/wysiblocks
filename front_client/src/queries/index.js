@@ -84,48 +84,6 @@ export const PAGE_DATA = gql`
   }
 `;
 
-// export const PAGE_DATA = gql`
-//   query($pageId: Int!, $first_pr: Int!) {
-//     page_blockList(filters: { page_id: $pageId }) {
-//       id
-//       component
-//       payload_ref
-//       page_id
-//       order
-//       options
-//       payload {
-//         ... on NewsPayloadType {
-//           id
-//           type
-//           newsFeed(first: $first_pr) {
-//             nodes {
-//               id
-//               title
-//               image
-//               uri
-//             }
-//           }
-//         }
-//         ... on EventPayloadType {
-//           id
-//           type
-//           eventFeed(first: $first_pr) {
-//             nodes {
-//               id
-//               title
-//               uri
-//               date
-//               closes
-//               location
-//               country
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
-
 export const NEWS_FEED = gql`
   query($fromIndex: Int!, $first: Int!, $tags: [String]) {
     newsFeed(first: $first, fromIndex: $fromIndex, filters: { tags: $tags }) {

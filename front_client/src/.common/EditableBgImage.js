@@ -104,7 +104,7 @@ const Image = styled.div`
 
 const UpdateBtnContainer = styled.div`
   position: absolute;
-  z-index: ${(p) => p.theme.zIndex.bgImageBtn};
+  z-index: ${(p) => p.theme.zIndex.bg_image_btn};
 
   & > button {
     background-color: rgba(255, 255, 255, 0.8);

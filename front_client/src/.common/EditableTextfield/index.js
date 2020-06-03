@@ -405,7 +405,7 @@ const Container = styled(TypographyObj)`
 
 const Controls = styled(EditableTexfieldControls)`
   position: absolute;
-  z-index: ${(p) => p.theme.zIndex.editTextfiledCtrls};
+  z-index: ${(p) => p.theme.zIndex.edit_text_filed_ctrls};
   top: ${(p) => p.y}px;
   left: ${(p) => p.x}px;
 `;

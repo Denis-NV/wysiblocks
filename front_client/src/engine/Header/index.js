@@ -3,28 +3,36 @@ import PropTypes from "prop-types";
 
 // Redux
 import { connect } from "react-redux";
-import { replaceSiteBlock } from "../../redux/actions/LocalActions";
+
+// Apollo GraphQl
+import { useMutation } from "@apollo/client";
 
 // CSS
 import styled from "styled-components";
 
 import { useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
 
 // Components
 import SiteBlockInstruments from "../../.common/SiteBlockInstruments";
-import LeftDrawer from "../../.common/LeftDrawer";
 import SiteBlockTypes from "../../.common/LeftDrawer/SiteBlockTypes";
 
 // Deafault
 const Header = (props) => {
-  const { site_block, className, editor, replaceSiteBlock } = props;
+  const { site_block, className, editor } = props;
 
   // Hooks
   const theme = useTheme();
+  // const [addTodo, { data }] = useMutation(ADD_TODO);
   const SpecializedHeader = React.useRef();
   const EditorContent = React.useRef();
   const [instr_visible, setInstrVisible] = React.useState(false);
   const [show_editor_draw, setShowEditorDraw] = React.useState(false);
+
+  // Handlers
+  const replaceHeader = (item) => {
+    console.log(item);
+  };
 
   // Render
   return (
@@ -40,12 +48,12 @@ const Header = (props) => {
     >
       {editor.is_edit_mode && (instr_visible || show_editor_draw) && (
         <>
-          <LeftDrawer
-            is_open={show_editor_draw}
-            closeCallback={() => setShowEditorDraw(false)}
+          <Drawer
+            open={show_editor_draw}
+            onClose={(e) => setShowEditorDraw(false)}
           >
             {EditorContent.current}
-          </LeftDrawer>
+          </Drawer>
           <SiteBlockInstruments
             showEditorCb={(show) => setShowEditorDraw(show)}
             setEditorContent={(type) => {
@@ -54,9 +62,7 @@ const Header = (props) => {
                   <SiteBlockTypes
                     type="header"
                     closeCallback={() => setShowEditorDraw(false)}
-                    actionCallback={(item) => {
-                      replaceSiteBlock(item, site_block.id);
-                    }}
+                    actionCallback={replaceHeader}
                   />
                 ) : (
                   <div>Simple Header Settings</div>
@@ -109,7 +115,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { replaceSiteBlock })(Header);
+export default connect(mapStateToProps, {})(Header);
 
 // #######################################
 // CSS

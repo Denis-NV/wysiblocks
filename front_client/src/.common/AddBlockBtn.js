@@ -78,5 +78,5 @@ const StyledFab = styled(Fab)`
   left: calc(50% - 20px);
   justify-content: center;
   position: absolute;
-  z-index: ${(p) => p.theme.zIndex.addBlockBtns};
+  z-index: ${(p) => p.theme.zIndex.add_block_btns};
 `;
