@@ -13,12 +13,6 @@
       "type": "string",
       "required": true
     },
-    "settings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "duples.settings-duple",
-      "required": true
-    },
     "page": {
       "via": "page_blocks",
       "model": "page"
@@ -33,12 +27,22 @@
       "default": false
     },
     "site": {
-      "model": "site",
-      "via": "page_blocks"
+      "via": "page_blocks",
+      "model": "site"
     },
     "is_deleted": {
       "type": "boolean",
       "default": false
+    },
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.data-set"
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.data-set"
     }
   }
 }

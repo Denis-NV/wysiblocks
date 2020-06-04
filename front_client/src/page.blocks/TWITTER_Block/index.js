@@ -33,7 +33,7 @@ const TWITTER_Block = (props) => {
     cur_data_key,
   } = props;
   const block_id = block_data.id;
-  const options = block_data.settings[cur_data_key].custom_map;
+  const options = block_data[cur_data_key].custom_map;
 
   // Hooks
   const theme = useTheme();

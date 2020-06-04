@@ -24,20 +24,17 @@ const Page = (props) => {
 
   const site_blocks = site_blocks_data
     .map((site_block) => ({ ...site_block }))
-    .sort(
-      (a, b) =>
-        a.settings[editor.cur_key].order - b.settings[editor.cur_key].order
-    );
+    .sort((a, b) => a[editor.cur_key].order - b[editor.cur_key].order);
 
   const cur_page = content_pages_data.find(
     (page) => page.uri === nav.current_address
   );
 
   const header_hidden = cur_page
-    ? cur_page.settings[editor.cur_key].header_hidden
+    ? cur_page[editor.cur_key].header_hidden
     : true;
   const footer_hidden = cur_page
-    ? cur_page.settings[editor.cur_key].footer_hidden
+    ? cur_page[editor.cur_key].footer_hidden
     : true;
 
   const header_height = header_hidden ? 0 : layout.header_height;

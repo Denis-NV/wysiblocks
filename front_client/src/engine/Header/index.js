@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 // Apollo GraphQl
 import { useMutation } from "@apollo/client";
+import { REPLACE_SITE_BLOCK } from "../../queries";
 
 // CSS
 import styled from "styled-components";
@@ -23,7 +24,7 @@ const Header = (props) => {
 
   // Hooks
   const theme = useTheme();
-  // const [addTodo, { data }] = useMutation(ADD_TODO);
+  const [replaceBlock, { data }] = useMutation(REPLACE_SITE_BLOCK);
   const SpecializedHeader = React.useRef();
   const EditorContent = React.useRef();
   const [instr_visible, setInstrVisible] = React.useState(false);
@@ -31,7 +32,16 @@ const Header = (props) => {
 
   // Handlers
   const replaceHeader = (item) => {
-    console.log(item);
+    // console.log(item);
+
+    replaceBlock({
+      variables: {
+        id: site_block.id,
+        comp: item.component,
+        order: site_block.draft.order,
+        settings: item.init_data,
+      },
+    });
   };
 
   // Render

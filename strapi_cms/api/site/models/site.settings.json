@@ -19,27 +19,31 @@
       "required": true,
       "unique": true
     },
-    "settings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "duples.site-settings-duple",
-      "required": true
-    },
     "nav_items": {
-      "via": "site",
-      "collection": "nav-item"
+      "collection": "nav-item",
+      "via": "site"
     },
     "pages": {
-      "via": "site",
-      "collection": "page"
+      "collection": "page",
+      "via": "site"
     },
     "page_blocks": {
-      "via": "site",
-      "collection": "page-block"
+      "collection": "page-block",
+      "via": "site"
     },
     "site_blocks": {
-      "via": "site",
-      "collection": "site-block"
+      "collection": "site-block",
+      "via": "site"
+    },
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.site-data-set"
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.site-data-set"
     }
   }
 }

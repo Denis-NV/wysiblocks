@@ -162,7 +162,7 @@ const App = (props) => {
         </p>
       );
 
-    const theme_obj = site_data.settings[editor.cur_key].theme || {};
+    const theme_obj = site_data[editor.cur_key].theme || {};
     const theme = createMuiTheme(theme_obj);
 
     loadFonts(theme);

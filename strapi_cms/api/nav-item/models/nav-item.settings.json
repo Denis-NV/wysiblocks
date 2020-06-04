@@ -21,19 +21,23 @@
       "unique": true,
       "model": "page"
     },
-    "settings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "duples.nav-item-settings-duple",
-      "required": true
-    },
     "site": {
-      "model": "site",
-      "via": "nav_items"
+      "via": "nav_items",
+      "model": "site"
     },
     "is_deleted": {
       "type": "boolean",
       "default": false
+    },
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.nav-item-data-set"
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.nav-item-data-set"
     }
   }
 }

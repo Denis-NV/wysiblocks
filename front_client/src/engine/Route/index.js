@@ -13,7 +13,7 @@ import Content from "../Content";
 
 const Route = (props) => {
   const { path, cur_data_key, page_data, className } = props;
-  const page_setting = page_data.settings[cur_data_key];
+  const page_setting = page_data[cur_data_key];
 
   // Hooks
   const dispatch = useDispatch();

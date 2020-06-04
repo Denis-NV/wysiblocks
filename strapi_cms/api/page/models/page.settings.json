@@ -13,12 +13,6 @@
       "collection": "page-block",
       "via": "page"
     },
-    "settings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "duples.page-settings-duple",
-      "required": true
-    },
     "uri": {
       "type": "string",
       "required": true,
@@ -38,12 +32,22 @@
       "default": false
     },
     "site": {
-      "model": "site",
-      "via": "pages"
+      "via": "pages",
+      "model": "site"
     },
     "is_deleted": {
       "type": "boolean",
       "default": false
+    },
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.page-data-set"
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.page-data-set"
     }
   }
 }

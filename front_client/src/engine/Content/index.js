@@ -53,10 +53,7 @@ const Content = (props) => {
 
     const blocks_data = page_blocks_data
       .map((page_block) => ({ ...page_block }))
-      .sort(
-        (a, b) =>
-          a.settings[editor.cur_key].order - b.settings[editor.cur_key].order
-      );
+      .sort((a, b) => a[editor.cur_key].order - b[editor.cur_key].order);
 
     return (
       <>

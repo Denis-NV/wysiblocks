@@ -4,31 +4,30 @@ import { gql } from "@apollo/client";
 export const SITE_DATA = gql`
   query($role: String, $live: Boolean!, $draft: Boolean!) {
     sites(where: { role: $role }) {
-      settings {
-        live @skip(if: $draft) {
-          title
-          theme
-        }
-        draft @skip(if: $live) {
-          title
-          theme
-        }
+      live @skip(if: $draft) {
+        title
+        theme
+      }
+      draft @skip(if: $live) {
+        title
+        theme
       }
 
       site_blocks {
         id
         type
         component
+        is_live
         is_deleted
-        settings {
-          live @skip(if: $draft) {
-            order
-            custom_map
-          }
-          draft @skip(if: $live) {
-            order
-            custom_map
-          }
+        unpublished
+
+        live @skip(if: $draft) {
+          order
+          custom_map
+        }
+        draft @skip(if: $live) {
+          order
+          custom_map
         }
       }
 
@@ -40,18 +39,16 @@ export const SITE_DATA = gql`
         unpublished
         protected
 
-        settings {
-          live @skip(if: $draft) {
-            title
-            header_hidden
-            footer_hidden
-          }
+        live @skip(if: $draft) {
+          title
+          header_hidden
+          footer_hidden
+        }
 
-          draft @skip(if: $live) {
-            title
-            header_hidden
-            footer_hidden
-          }
+        draft @skip(if: $live) {
+          title
+          header_hidden
+          footer_hidden
         }
       }
     }
@@ -68,21 +65,51 @@ export const PAGE_DATA = gql`
         unpublished
         component
 
-        settings {
-          live @skip(if: $draft) {
-            order
-            custom_map
-          }
+        live @skip(if: $draft) {
+          order
+          custom_map
+        }
 
-          draft @skip(if: $live) {
-            order
-            custom_map
-          }
+        draft @skip(if: $live) {
+          order
+          custom_map
         }
       }
     }
   }
 `;
+
+export const REPLACE_SITE_BLOCK = gql`
+  mutation($id: ID!, $comp: String!, $order: Int!, $settings: JSON) {
+    updateSiteBlock(
+      input: {
+        where: { id: $id }
+        data: {
+          component: $comp
+          unpublished: true
+          draft: { order: $order, custom_map: $settings }
+        }
+      }
+    ) {
+      siteBlock {
+        id
+        type
+        component
+        is_live
+        is_deleted
+        unpublished
+
+        draft {
+          order
+          custom_map
+        }
+      }
+    }
+  }
+`;
+
+//
+//
 
 export const NEWS_FEED = gql`
   query($fromIndex: Int!, $first: Int!, $tags: [String]) {

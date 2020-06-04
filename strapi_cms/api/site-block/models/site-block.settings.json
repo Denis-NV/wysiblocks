@@ -9,12 +9,6 @@
     "timestamps": true
   },
   "attributes": {
-    "settings": {
-      "type": "component",
-      "repeatable": false,
-      "component": "duples.settings-duple",
-      "required": true
-    },
     "type": {
       "type": "enumeration",
       "enum": [
@@ -30,12 +24,30 @@
       "required": true
     },
     "site": {
-      "model": "site",
-      "via": "site_blocks"
+      "via": "site_blocks",
+      "model": "site"
     },
     "is_deleted": {
       "type": "boolean",
       "default": false
+    },
+    "unpublished": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_live": {
+      "type": "boolean",
+      "default": false
+    },
+    "live": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.data-set"
+    },
+    "draft": {
+      "type": "component",
+      "repeatable": false,
+      "component": "data-sets.data-set"
     }
   }
 }

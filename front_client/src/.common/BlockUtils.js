@@ -95,7 +95,7 @@ export const withHeaderBlockUtils = (mapStateToProps, mapActionsToProps) => (
   const hocComponent = ({ ...props }) => {
     const { site_block, cur_data_key } = props;
 
-    const options = site_block.settings[cur_data_key].custom_map;
+    const options = site_block[cur_data_key].custom_map;
     // console.log("header settings:", options);
 
     // TODO: not sure if block_is is required by the block
@@ -163,7 +163,7 @@ export const withFooterBlockUtils = (mapStateToProps, mapActionsToProps) => (
   const hocComponent = ({ ...props }) => {
     const { site_block, cur_data_key } = props;
 
-    const options = site_block.settings[cur_data_key].custom_map;
+    const options = site_block[cur_data_key].custom_map;
     const block_id = site_block.id;
 
     // Handlers
