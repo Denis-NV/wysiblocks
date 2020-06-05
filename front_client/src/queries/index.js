@@ -18,16 +18,17 @@ export const SITE_DATA = gql`
       site_blocks {
         id
         type
-        component
         is_live
         unpublished
 
         live @skip(if: $draft) {
           order
+          component
           custom_map
         }
         draft @skip(if: $live) {
           order
+          component
           custom_map
         }
       }
@@ -86,21 +87,20 @@ export const REPLACE_SITE_BLOCK = gql`
       input: {
         where: { id: $id }
         data: {
-          component: $comp
           unpublished: true
-          draft: { order: $order, custom_map: $settings }
+          draft: { order: $order, component: $comp, custom_map: $settings }
         }
       }
     ) {
       siteBlock {
         id
         type
-        component
         is_live
         unpublished
 
         draft {
           order
+          component
           custom_map
         }
       }

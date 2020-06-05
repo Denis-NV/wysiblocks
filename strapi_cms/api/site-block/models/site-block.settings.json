@@ -19,10 +19,6 @@
       "required": true,
       "unique": true
     },
-    "component": {
-      "type": "string",
-      "required": true
-    },
     "site": {
       "model": "site",
       "via": "site_blocks"
@@ -38,12 +34,12 @@
     "live": {
       "type": "component",
       "repeatable": false,
-      "component": "data-sets.data-set"
+      "component": "data-sets.site-block-data-set"
     },
     "draft": {
       "type": "component",
       "repeatable": false,
-      "component": "data-sets.data-set"
+      "component": "data-sets.site-block-data-set"
     }
   }
 }

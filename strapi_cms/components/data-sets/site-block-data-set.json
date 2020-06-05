@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_data_sets_site_block_data_sets",
+  "info": {
+    "name": "Site Block Data Set",
+    "icon": "border-none"
+  },
+  "options": {},
+  "attributes": {
+    "component": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "required": true
+    },
+    "custom_map": {
+      "type": "json"
+    }
+  }
+}

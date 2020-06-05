@@ -118,7 +118,7 @@ const Header = (props) => {
         </>
       )}
       {React.useMemo(() => {
-        const component = site_block.component;
+        const component = site_block[editor.cur_key].component;
 
         if (component) {
           SpecializedHeader.current[component] =
