@@ -20,20 +20,20 @@
       "unique": true
     },
     "nav_items": {
-      "collection": "nav-item",
-      "via": "site"
+      "via": "site",
+      "collection": "nav-item"
     },
     "pages": {
-      "collection": "page",
-      "via": "site"
+      "via": "site",
+      "collection": "page"
     },
     "page_blocks": {
-      "collection": "page-block",
-      "via": "site"
+      "via": "site",
+      "collection": "page-block"
     },
     "site_blocks": {
-      "collection": "site-block",
-      "via": "site"
+      "via": "site",
+      "collection": "site-block"
     },
     "live": {
       "type": "component",

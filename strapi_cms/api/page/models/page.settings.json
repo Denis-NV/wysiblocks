@@ -10,8 +10,8 @@
   },
   "attributes": {
     "page_blocks": {
-      "collection": "page-block",
-      "via": "page"
+      "via": "page",
+      "collection": "page-block"
     },
     "uri": {
       "type": "string",
@@ -32,12 +32,8 @@
       "default": false
     },
     "site": {
-      "via": "pages",
-      "model": "site"
-    },
-    "is_deleted": {
-      "type": "boolean",
-      "default": false
+      "model": "site",
+      "via": "pages"
     },
     "live": {
       "type": "component",

@@ -18,7 +18,6 @@ export const SITE_DATA = gql`
         type
         component
         is_live
-        is_deleted
         unpublished
 
         live @skip(if: $draft) {
@@ -35,7 +34,6 @@ export const SITE_DATA = gql`
         id
         uri
         is_live
-        is_deleted
         unpublished
         protected
 
@@ -61,7 +59,6 @@ export const PAGE_DATA = gql`
       page_blocks {
         id
         is_live
-        is_deleted
         unpublished
         component
 
@@ -78,6 +75,29 @@ export const PAGE_DATA = gql`
     }
   }
 `;
+
+export const SITE_BLOCK = gql`
+  query($id: ID!, $live: Boolean!, $draft: Boolean!) {
+    siteBlock(id: $id) {
+      id
+      type
+      component
+      is_live
+      unpublished
+
+      live @skip(if: $draft) {
+        order
+        custom_map
+      }
+      draft @skip(if: $live) {
+        order
+        custom_map
+      }
+    }
+  }
+`;
+
+// Mutations
 
 export const REPLACE_SITE_BLOCK = gql`
   mutation($id: ID!, $comp: String!, $order: Int!, $settings: JSON) {
@@ -96,7 +116,6 @@ export const REPLACE_SITE_BLOCK = gql`
         type
         component
         is_live
-        is_deleted
         unpublished
 
         draft {

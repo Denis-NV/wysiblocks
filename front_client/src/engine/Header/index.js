@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 
 // Apollo GraphQl
 import { useMutation } from "@apollo/client";
+
 import { REPLACE_SITE_BLOCK } from "../../queries";
 
 // CSS
@@ -24,8 +25,44 @@ const Header = (props) => {
 
   // Hooks
   const theme = useTheme();
-  const [replaceBlock, { data }] = useMutation(REPLACE_SITE_BLOCK);
-  const SpecializedHeader = React.useRef();
+  const [replaceBlock] = useMutation(REPLACE_SITE_BLOCK, {
+    // update(cache, { data: { updateSiteBlock } }) {
+    //   // const s_b = cache.readQuery({
+    //   //   query: SITE_BLOCK,
+    //   //   variables: {
+    //   //     id: site_block.id,
+    //   //     live: false,
+    //   //     draft: true,
+    //   //   },
+    //   // });
+    //   // const { sites } = cache.readQuery({
+    //   //   query: SITE_DATA,
+    //   //   variables: {
+    //   //     role: window._env_.REACT_APP_SITE_ROLE,
+    //   //     live: false,
+    //   //     draft: true,
+    //   //   },
+    //   // });
+    //   const fr = cache.readFragment({
+    //     id: `SiteBlock:${site_block.id}`,
+    //     fragment: gql`
+    //       fragment MySiteBlock on SiteBlock {
+    //         component
+    //         draft
+    //       }
+    //     `,
+    //     // data: {
+    //     //   component: updateSiteBlock.siteBlock.component,
+    //     //   draft: updateSiteBlock.siteBlock.draft,
+    //     // },
+    //   });
+    //   // console.log(cache);
+    //   // console.log(fr);
+    //   // console.log(updateSiteBlock.siteBlock.component);
+    //   // console.log(updateSiteBlock.siteBlock.draft);
+    // },
+  });
+  const SpecializedHeader = React.useRef({});
   const EditorContent = React.useRef();
   const [instr_visible, setInstrVisible] = React.useState(false);
   const [show_editor_draw, setShowEditorDraw] = React.useState(false);
@@ -85,13 +122,15 @@ const Header = (props) => {
         const component = site_block.component;
 
         if (component) {
-          SpecializedHeader.current =
-            SpecializedHeader.current ||
+          SpecializedHeader.current[component] =
+            SpecializedHeader.current[component] ||
             React.lazy(() => import(`../../header.blocks/${component}`));
+
+          const CurSpecializedHeader = SpecializedHeader.current[component];
 
           return (
             <React.Suspense fallback={null}>
-              <SpecializedHeader.current
+              <CurSpecializedHeader
                 site_block={site_block}
                 cur_data_key={editor.cur_key}
                 showEditorCb={() => setShowEditorDraw(true)}

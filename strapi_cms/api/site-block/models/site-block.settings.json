@@ -24,12 +24,8 @@
       "required": true
     },
     "site": {
-      "via": "site_blocks",
-      "model": "site"
-    },
-    "is_deleted": {
-      "type": "boolean",
-      "default": false
+      "model": "site",
+      "via": "site_blocks"
     },
     "unpublished": {
       "type": "boolean",
