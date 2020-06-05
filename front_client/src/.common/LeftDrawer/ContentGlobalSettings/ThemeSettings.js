@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-import axios from "axios";
+// Apollo GraphQl
+import { useMutation, useApolloClient } from "@apollo/client";
 
-// Redux
-import { connect } from "react-redux";
-import { commitThemeEdits } from "../../../redux/actions/RemoteActions";
+import { UPDATE_THEME, SITE_DATA } from "../../../queries";
 
 // CSS and MUI
 import styled from "styled-components";
@@ -15,20 +14,20 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
 // Utils
+import lodash from "lodash";
 import { SwatchesPicker } from "react-color";
 import { fonts_options } from "../../../const";
 
 // Components
 
-const ThemeSettings = ({ site, commitThemeEdits, setSave }) => {
+const ThemeSettings = ({ setSave }) => {
   // Hooks
+  const client = useApolloClient();
   const theme_edited = useRef(false);
   const updates_commited = useRef(false);
   const [data, setData] = useState(null);
   const theme = useTheme();
-
-  const CancelToken = axios.CancelToken;
-  const source = CancelToken.source();
+  const [updateTheme] = useMutation(UPDATE_THEME);
 
   useEffect(() => {
     if (!data || updates_commited.current) {
@@ -38,19 +37,11 @@ const ThemeSettings = ({ site, commitThemeEdits, setSave }) => {
         primary_color: theme.palette.primary.main,
         secondary_color: theme.palette.secondary.main,
         main_font: theme.typography.fontFamily.split(",")[0],
-        header_logo: theme.custom.header_logo,
       };
 
       setData({ ...editable_settings });
     }
-
-    //
-
-    return () => {
-      // cleanup logic
-      source.cancel("Image upload canceled due to ui element closure");
-    };
-  }, [data, setData, theme, source]);
+  }, [data, setData, theme]);
 
   // Handlers
   setSave(() => {
@@ -58,7 +49,33 @@ const ThemeSettings = ({ site, commitThemeEdits, setSave }) => {
       theme_edited.current = false;
       updates_commited.current = true;
 
-      commitThemeEdits(data);
+      const { sites } = client.readQuery({
+        query: SITE_DATA,
+        variables: {
+          role: window._env_.REACT_APP_SITE_ROLE,
+          live: false,
+          draft: true,
+        },
+      });
+
+      const old_theme = { ...sites[0].draft.theme };
+      const new_theme = {
+        palette: {
+          primary: { main: data.primary_color },
+          secondary: { main: data.secondary_color },
+        },
+        typography: { fontFamily: data.main_font },
+      };
+
+      lodash.merge(new_theme, old_theme);
+
+      updateTheme({
+        variables: {
+          id: sites[0].id,
+          title: sites[0].draft.title,
+          theme: new_theme,
+        },
+      });
     }
   });
 
@@ -155,19 +172,10 @@ const ThemeSettings = ({ site, commitThemeEdits, setSave }) => {
 };
 
 ThemeSettings.propTypes = {
-  site: PropTypes.object.isRequired,
-  commitThemeEdits: PropTypes.func.isRequired,
+  setSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    site: state.Site,
-  };
-};
-
-const mapActionsToProps = { commitThemeEdits };
-
-export default connect(mapStateToProps, mapActionsToProps)(ThemeSettings);
+export default ThemeSettings;
 
 // #######################################
 // CSS

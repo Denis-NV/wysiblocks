@@ -22,8 +22,7 @@ const SIMPLE_Footer001 = (props) => {
 SIMPLE_Footer001.propTypes = {
   site: PropTypes.object.isRequired,
   block_id: PropTypes.string.isRequired,
-  options: PropTypes.object.isRequired,
-  onContentUpdate: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
 export default withFooterBlockUtils(

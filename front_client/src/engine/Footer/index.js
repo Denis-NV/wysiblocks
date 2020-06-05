@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 
 // Redux
 import { connect } from "react-redux";
-import { replaceSiteBlock } from "../../redux/actions/LocalActions";
+
+// Apollo GraphQl
+import { useMutation } from "@apollo/client";
+
+import { REPLACE_SITE_BLOCK } from "../../queries";
 
 // CSS
 import styled from "styled-components";
@@ -17,14 +21,28 @@ import SiteBlockTypes from "../../.common/LeftDrawer/SiteBlockTypes";
 
 // Deafault
 const Footer = (props) => {
-  const { site_block, className, editor, replaceSiteBlock } = props;
+  const { site_block, className, editor } = props;
 
   // Hooks
   const theme = useTheme();
-  const SpecializedFooter = React.useRef();
+  const SpecializedFooter = React.useRef({});
   const EditorContent = React.useRef();
   const [instr_visible, setInstrVisible] = React.useState(false);
   const [show_editor_draw, setShowEditorDraw] = React.useState(false);
+
+  const [replaceBlock] = useMutation(REPLACE_SITE_BLOCK);
+
+  // Handlers
+  const replaceHeader = (item) => {
+    replaceBlock({
+      variables: {
+        id: site_block.id,
+        comp: item.component,
+        order: site_block.draft.order,
+        settings: item.init_data,
+      },
+    });
+  };
 
   // Render
   return (
@@ -54,9 +72,7 @@ const Footer = (props) => {
                   <SiteBlockTypes
                     type="footer"
                     closeCallback={() => setShowEditorDraw(false)}
-                    actionCallback={(item) => {
-                      replaceSiteBlock(item, site_block.id);
-                    }}
+                    actionCallback={replaceHeader}
                   />
                 ) : (
                   <div>Simple Footer Settings</div>
@@ -69,13 +85,15 @@ const Footer = (props) => {
         const component = site_block.component;
 
         if (component) {
-          SpecializedFooter.current =
-            SpecializedFooter.current ||
+          SpecializedFooter.current[component] =
+            SpecializedFooter.current[component] ||
             React.lazy(() => import(`../../footer.blocks/${component}`));
+
+          const CurSpecializedFooter = SpecializedFooter.current[component];
 
           return (
             <React.Suspense fallback={null}>
-              <SpecializedFooter.current
+              <CurSpecializedFooter
                 site_block={site_block}
                 cur_data_key={editor.cur_key}
                 showEditorCb={() => setShowEditorDraw(true)}
@@ -109,7 +127,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { replaceSiteBlock })(Footer);
+export default connect(mapStateToProps, {})(Footer);
 
 // #######################################
 // CSS

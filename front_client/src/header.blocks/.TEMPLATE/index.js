@@ -27,8 +27,7 @@ index.propTypes = {
   site: PropTypes.object.isRequired,
   nav: PropTypes.object.isRequired,
   block_id: PropTypes.string.isRequired,
-  options: PropTypes.object.isRequired,
-  onContentUpdate: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
 export default withHeaderBlockUtils(

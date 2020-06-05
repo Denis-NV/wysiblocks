@@ -21,7 +21,7 @@ const SIMPLE_NAV_Header_002 = (props) => {
     nav,
     theme,
     navigateTo,
-    options,
+    settings,
     block_id,
     updateSiteBlock,
   } = props;
@@ -41,8 +41,8 @@ const SIMPLE_NAV_Header_002 = (props) => {
               //  "logo_img_url",
               //  "https://res.cloudinary.com/dij62dqc8/image/upload/v1580480310/ach3hs5lirvn4hswqnfr.png",
               //],
-              url: ["logo_img_url", options.logo_img_url],
-              alt: ["logo_img_alt", options.logo_img_alt],
+              url: ["logo_img_url", settings.logo_img_url],
+              alt: ["logo_img_alt", settings.logo_img_alt],
             }}
           />
         </figure>
@@ -83,8 +83,7 @@ SIMPLE_NAV_Header_002.propTypes = {
   site: PropTypes.object.isRequired,
   nav: PropTypes.object.isRequired,
   block_id: PropTypes.string.isRequired,
-  options: PropTypes.object.isRequired,
-  onContentUpdate: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
 export default withHeaderBlockUtils(

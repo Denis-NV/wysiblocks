@@ -95,18 +95,8 @@ export const withHeaderBlockUtils = (mapStateToProps, mapActionsToProps) => (
   const hocComponent = ({ ...props }) => {
     const { site_block, cur_data_key } = props;
 
-    const options = site_block[cur_data_key].custom_map;
-    // console.log("header settings:", options);
-
-    // TODO: not sure if block_is is required by the block
+    const settings = site_block[cur_data_key].custom_map;
     const block_id = site_block.id;
-
-    // Handlers
-    // TODO: get rid of this later
-    const onContentUpdate = (field, value) => {
-      // const data = { [field]: value };
-      // updateSiteBlock(block_id, data);
-    };
 
     const HeightMeasuredWrappedComponent = (props) => {
       const container_ref = React.useRef();
@@ -126,14 +116,13 @@ export const withHeaderBlockUtils = (mapStateToProps, mapActionsToProps) => (
           }
         }
       }, []);
-      // TODO: change "options" to "settings"
+
       return (
         <div ref={container_ref}>
           <WrappedComponent
             {...props}
-            options={options}
+            settings={settings}
             block_id={block_id}
-            onContentUpdate={onContentUpdate}
           />
         </div>
       );
@@ -163,22 +152,11 @@ export const withFooterBlockUtils = (mapStateToProps, mapActionsToProps) => (
   const hocComponent = ({ ...props }) => {
     const { site_block, cur_data_key } = props;
 
-    const options = site_block[cur_data_key].custom_map;
+    const settings = site_block[cur_data_key].custom_map;
     const block_id = site_block.id;
 
-    // Handlers
-    const onContentUpdate = (field, value) => {
-      // const data = { [field]: value };
-      // updateSiteBlock(block_id, data);
-    };
-
     return (
-      <WrappedComponent
-        {...props}
-        options={options}
-        block_id={block_id}
-        onContentUpdate={onContentUpdate}
-      />
+      <WrappedComponent {...props} settings={settings} block_id={block_id} />
     );
   };
 

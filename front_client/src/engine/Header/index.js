@@ -25,6 +25,11 @@ const Header = (props) => {
 
   // Hooks
   const theme = useTheme();
+  const SpecializedHeader = React.useRef({});
+  const EditorContent = React.useRef();
+  const [instr_visible, setInstrVisible] = React.useState(false);
+  const [show_editor_draw, setShowEditorDraw] = React.useState(false);
+
   const [replaceBlock] = useMutation(REPLACE_SITE_BLOCK, {
     // update(cache, { data: { updateSiteBlock } }) {
     //   // const s_b = cache.readQuery({
@@ -62,15 +67,9 @@ const Header = (props) => {
     //   // console.log(updateSiteBlock.siteBlock.draft);
     // },
   });
-  const SpecializedHeader = React.useRef({});
-  const EditorContent = React.useRef();
-  const [instr_visible, setInstrVisible] = React.useState(false);
-  const [show_editor_draw, setShowEditorDraw] = React.useState(false);
 
   // Handlers
   const replaceHeader = (item) => {
-    // console.log(item);
-
     replaceBlock({
       variables: {
         id: site_block.id,
