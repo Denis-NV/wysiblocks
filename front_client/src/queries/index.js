@@ -79,6 +79,57 @@ export const PAGE_DATA = gql`
   }
 `;
 
+export const PAGES = gql`
+  query($live: Boolean!, $draft: Boolean!) {
+    pages {
+      id
+      uri
+      is_live
+      unpublished
+      protected
+
+      live @skip(if: $live) {
+        title
+        header_hidden
+        footer_hidden
+      }
+
+      draft @skip(if: $draft) {
+        title
+        header_hidden
+        footer_hidden
+      }
+    }
+  }
+`;
+
+export const NAV_ITEMS = gql`
+  query($live: Boolean!, $draft: Boolean!) {
+    navItems {
+      id
+      is_live
+      unpublished
+      page {
+        uri
+      }
+
+      live @skip(if: $live) {
+        lft
+        rgt
+        title
+        body
+      }
+
+      draft @skip(if: $draft) {
+        lft
+        rgt
+        title
+        body
+      }
+    }
+  }
+`;
+
 // Mutations
 
 export const REPLACE_SITE_BLOCK = gql`
@@ -121,6 +172,45 @@ export const UPDATE_THEME = gql`
         draft {
           title
           theme
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_PAGE = gql`
+  mutation(
+    $id: ID!
+    $uri: String!
+    $title: String!
+    $header_hidden: Boolean!
+    $footer_hidden: Boolean!
+  ) {
+    updatePage(
+      input: {
+        where: { id: $id }
+        data: {
+          unpublished: true
+          uri: $uri
+          draft: {
+            title: $title
+            header_hidden: $header_hidden
+            footer_hidden: $footer_hidden
+          }
+        }
+      }
+    ) {
+      page {
+        id
+        uri
+        is_live
+        unpublished
+        protected
+
+        draft {
+          title
+          header_hidden
+          footer_hidden
         }
       }
     }

@@ -205,22 +205,5 @@
       },
       "is_secondary": false
     }
-  },
-
-  {
-    "component": "TWITTER_Block",
-    "payload_ref": "",
-    "menu": {
-      "title": "Twitter",
-      "description": "",
-      "image": "",
-      "category": "",
-      "tags": ""
-    },
-    "init_data": {
-      "screenName": "instructhub",
-      "height": 400,
-      "image": "https://pbs.twimg.com/profile_images/1111729635610382336/_65QFl7B.png"
-    }
   }
 ]

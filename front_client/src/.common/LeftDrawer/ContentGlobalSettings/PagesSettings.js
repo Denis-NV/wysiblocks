@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-// Redux
-import { connect } from "react-redux";
-import { commitPagesEdits } from "../../../redux/actions/RemoteActions";
+// Apollo GraphQl
+import { useApolloClient, useQuery, useMutation } from "@apollo/client";
+
+import { SITE_DATA, NAV_ITEMS, UPDATE_PAGE } from "../../../queries";
 
 // CSS and MUI
 import styled from "styled-components";
@@ -21,65 +22,67 @@ import TextField from "@material-ui/core/TextField";
 import { sortNav, getNavSiblings } from "../../DataUtils";
 import { route_id_var } from "../../../const";
 
-const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
+const PagesSettings = () => {
   // Hooks
+  const client = useApolloClient();
   const theme = useTheme();
-  const pages_edited = useRef(false);
-  const nav_edited = useRef(false);
-  const updates_commited = useRef(false);
-  const [pages, setPages] = useState(null);
-  const [nav, setNav] = useState(null);
+  const [updatePage] = useMutation(UPDATE_PAGE);
 
-  useEffect(() => {
-    if (!pages || updates_commited.current) {
-      updates_commited.current = false;
-      setPages({ ...site.pages });
-    }
-    if (!nav || updates_commited.current) {
-      updates_commited.current = false;
-      setNav([...site.nav]);
-    }
-  }, [pages, setPages, site.pages, nav, setNav, site.nav]);
-
-  // Handlers
-  setSave(() => {
-    if (pages_edited.current || nav_edited.current) {
-      commitPagesEdits(pages, nav);
-
-      updates_commited.current = true;
-      pages_edited.current = false;
-      nav_edited.current = false;
-    }
+  const { sites } = client.readQuery({
+    query: SITE_DATA,
+    variables: {
+      role: window._env_.REACT_APP_SITE_ROLE,
+      live: false,
+      draft: true,
+    },
   });
 
+  const site = sites[0] || {};
+
+  // Handlers
   const onDeletePage = (id) => (event) => {
-    let new_pages = {};
-    for (const key in pages) {
-      if (key !== id) new_pages[key] = pages[key];
-    }
-
-    const new_nav = nav.filter((item) => item.to !== pages[id].uri);
-
-    pages_edited.current = true;
-    nav_edited.current = true;
-
-    setPages(new_pages);
-    setNav(new_nav);
+    // let new_pages = {};
+    // for (const key in pages) {
+    //   if (key !== id) new_pages[key] = pages[key];
+    // }
+    // const new_nav = nav.filter((item) => item.to !== pages[id].uri);
+    // pages_edited.current = true;
+    // nav_edited.current = true;
+    // setPages(new_pages);
+    // setNav(new_nav);
   };
 
   const onPageChange = (id, key) => (event) => {
-    pages_edited.current = true;
-
-    setPages({ ...pages, [id]: { ...pages[id], [key]: event.target.value } });
+    // const { draft } = client.readFragment({
+    //   id: `Page:${id}`,
+    //   fragment: gql`
+    //     fragment PageFragment on Page {
+    //       draft
+    //     }
+    //   `,
+    // });
+    // const new_draft = { ...draft, [key]: event.target.value };
+    // client.writeFragment({
+    //   id: `Page:${id}`,
+    //   fragment: gql`
+    //     fragment PageFragment on Page {
+    //       draft
+    //     }
+    //   `,
+    //   data: {
+    //     draft: new_draft,
+    //   },
+    // });
+    // pages_edited.current = true;
+    // setPages({ ...pages, [id]: { ...pages[id], [key]: event.target.value } });
   };
 
   const onAddPage = (event) => {
-    pages_edited.current = true;
-
-    setPages({
-      ...pages,
-      [`TEMP_${Date.now()}`]: { uri: "", title: "" },
-    });
+    // pages_edited.current = true;
+    // setPages({
+    //   ...pages,
+    //   [`TEMP_${Date.now()}`]: { uri: "", title: "" },
+    // });
   };
 
   const onDeleteNavItem = (id) => (event) => {
@@ -155,18 +158,68 @@ const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
   };
 
   // Render
-  return (
-    <Container theme={theme}>
-      <SectionTitle
-        display="block"
-        variant="subtitle1"
-        gutterBottom
-        paragraph
-        theme={theme}
-      >
-        Pages
-      </SectionTitle>
-      {pages && (
+  const PagesUI = () => {
+    const PageRow = ({ page }) => {
+      const [page_state, setPageSate] = React.useState({
+        title: page.draft.title,
+        uri: page.uri,
+      });
+
+      const onInput = (key) => (e) => {
+        setPageSate({ ...page_state, [key]: e.target.value });
+      };
+
+      const onBlur = (e) => {
+        updatePage({
+          variables: {
+            id: page.id,
+            uri: page_state.uri,
+            title: page_state.title,
+            header_hidden: page.draft.header_hidden,
+            footer_hidden: page.draft.footer_hidden,
+          },
+        });
+      };
+
+      return (
+        <Row>
+          <Input
+            theme={theme}
+            style={{ flex: 50 }}
+            fullWidth
+            margin="dense"
+            size="small"
+            color="secondary"
+            value={page_state.title}
+            onChange={onInput("title")}
+            onBlur={onBlur}
+          />
+          <Input
+            theme={theme}
+            style={{ flex: 50 }}
+            fullWidth
+            margin="dense"
+            size="small"
+            color="secondary"
+            value={page_state.uri}
+            onChange={onInput("uri")}
+            onBlur={onBlur}
+          />
+          <Btns>
+            <CancelIcon
+              color="action"
+              onClick={onDeletePage(page.id)}
+              style={{ cursor: "pointer" }}
+            />
+          </Btns>
+        </Row>
+      );
+    };
+
+    const pages = site.pages || [];
+
+    if (pages) {
+      return (
         <>
           <Row>
             <Typography variant="caption" style={{ flex: 50 }}>
@@ -179,39 +232,9 @@ const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
               <CancelIcon />
             </Btns>
           </Row>
-          {Object.entries(pages).map(([id, data]) => {
-            return (
-              <Row key={id}>
-                <Input
-                  theme={theme}
-                  style={{ flex: 50 }}
-                  fullWidth
-                  margin="dense"
-                  size="small"
-                  color="secondary"
-                  value={data.title}
-                  onChange={onPageChange(id, "title")}
-                />
-                <Input
-                  theme={theme}
-                  style={{ flex: 50 }}
-                  fullWidth
-                  margin="dense"
-                  size="small"
-                  color="secondary"
-                  value={data.uri}
-                  onChange={onPageChange(id, "uri")}
-                />
-                <Btns>
-                  <CancelIcon
-                    color="action"
-                    onClick={onDeletePage(id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </Btns>
-              </Row>
-            );
-          })}
+          {pages.map((page, index) => (
+            <PageRow key={index} page={page} />
+          ))}
           <Row>
             <Fab
               style={{ margin: "16px 0" }}
@@ -224,17 +247,22 @@ const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
             </Fab>
           </Row>
         </>
-      )}
-      <SectionTitle
-        display="block"
-        variant="subtitle1"
-        gutterBottom
-        paragraph
-        theme={theme}
-      >
-        Navigation
-      </SectionTitle>
-      {nav && (
+      );
+    } else return null;
+  };
+
+  const NavUI = (props) => {
+    const { data } = useQuery(NAV_ITEMS, {
+      variables: {
+        live: true,
+        draft: false,
+      },
+    });
+
+    if (data) {
+      const nav = data.navItems || [];
+
+      return (
         <>
           <Row>
             <Typography variant="caption" style={{ flex: 47 }}>
@@ -316,8 +344,33 @@ const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
             );
           })}
         </>
-      )}
-      {pages && Object.entries(pages).length > 0 && (
+      );
+    } else return null;
+  };
+
+  return (
+    <Container theme={theme}>
+      <SectionTitle
+        display="block"
+        variant="subtitle1"
+        gutterBottom
+        paragraph
+        theme={theme}
+      >
+        Pages
+      </SectionTitle>
+      <PagesUI />
+      <SectionTitle
+        display="block"
+        variant="subtitle1"
+        gutterBottom
+        paragraph
+        theme={theme}
+      >
+        Navigation
+      </SectionTitle>
+      {/* <NavUI /> */}
+      {/* {pages && Object.entries(pages).length > 0 && (
         <Row>
           <Fab
             style={{ marginTop: 16 }}
@@ -329,26 +382,14 @@ const PagesSettings = ({ site, setSave, commitPagesEdits }) => {
             <AddIcon />
           </Fab>
         </Row>
-      )}
+      )} */}
     </Container>
   );
 };
 
-PagesSettings.propTypes = {
-  site: PropTypes.object.isRequired,
-  commitPagesEdits: PropTypes.func.isRequired,
-  setSave: PropTypes.func.isRequired,
-};
+PagesSettings.propTypes = {};
 
-const mapStateToProps = (state) => {
-  return {
-    site: state.Site,
-  };
-};
-
-const mapActionsToProps = { commitPagesEdits };
-
-export default connect(mapStateToProps, mapActionsToProps)(PagesSettings);
+export default PagesSettings;
 
 // #######################################
 // CSS
